@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply bg-white dark:bg-black;
+}
+
+.dark-border {
+    @apply dark:border-zinc-600;
+}
+
+.bg {
+    @apply bg-zinc-100 dark:bg-zinc-800;
+}
