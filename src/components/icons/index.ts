@@ -4,5 +4,6 @@ import LogOutBtn from "./LogOutBtn.vue";
 import ThemeSwitch from "./ThemeSwitch.vue";
 import Menu from "./Menu.vue";
 import PostStatusSwitch from "./PostStatusSwitch.vue";
+import Spinner from "./Spinner.vue";
 
-export { Google, CheckBox, LogOutBtn, ThemeSwitch, Menu, PostStatusSwitch };
+export { Google, CheckBox, LogOutBtn, ThemeSwitch, Menu, PostStatusSwitch, Spinner };

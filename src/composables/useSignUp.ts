@@ -18,6 +18,14 @@ export default function () {
             return `https://ui-avatars.com/api/?name=${username}&background=${color}&color=fff.jpg`;
         }
 
+        const createNewUserFeatures = async (features: any) => {
+            try {
+                await pb.collection("users_features").create(features)
+            } catch (err: any) {
+                alert(err.message);
+            }
+        }
+
         const fileInputEl = document.getElementById('fileInput') as any;
 
         const newUser = {
@@ -33,6 +41,14 @@ export default function () {
 
         try {
             await pb.collection("users").create(newUser)
+                .then(async () => {
+                    await createNewUserFeatures({
+                        username: newUser.username,
+                        email: newUser.email,
+                        followings: [],
+                        followers: []
+                    })
+                })
                 .then(async () => {
                     await logIn({
                         "email": username,

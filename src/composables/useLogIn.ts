@@ -1,18 +1,22 @@
 import { Dashboard } from "../components";
 import { pb } from "../pocketbase"
 import { useMainStore } from "../stores/main";
+import { useUsersStore } from "../stores/userManagement";
 
 export default function () {
 
     const logIn = async (data: any) => {
+
+        const { updateLoggedInUser } = useUsersStore();
+        const { switchDisplay } = useMainStore();
 
         const { email, password } = data;
 
         try {
             await pb.collection("users").authWithPassword(email, password)
             .then(() => pb.authStore.exportToCookie())
-            .then(() => useMainStore().updateLoggedInUser())
-            .then(() => useMainStore().switchDisplay(Dashboard))
+            .then(() => updateLoggedInUser())
+            .then(() => switchDisplay(Dashboard))
         } catch (error: any) {
             alert(error.message);
         }

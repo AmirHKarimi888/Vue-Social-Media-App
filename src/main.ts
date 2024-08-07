@@ -5,6 +5,8 @@ import { createPinia } from "pinia";
 import router from './router';
 import PrimeVue from 'primevue/config';
 import Aura from "@primevue/themes/aura";
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
 
 createApp(App)
     .use(createPinia())
@@ -22,4 +24,6 @@ createApp(App)
         }
 
     })
+    .use(ConfirmationService)
+    .use(ToastService)
     .mount('#app')

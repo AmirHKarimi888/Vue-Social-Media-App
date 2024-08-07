@@ -5,5 +5,10 @@ import Drawer from "./Drawer.vue";
 import NavBar from "./NavBar.vue";
 import Profile from "./Profile.vue";
 import CreatePosts from "./CreatePosts.vue";
+import Options from "./Options.vue";
+import Feed from "./Feed.vue";
+import PostManagement from "./PostManagement.vue";
+import Bookmarks from "./Bookmarks.vue";
+import Posts from "./Posts.vue";
 
-export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts };
+export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts };

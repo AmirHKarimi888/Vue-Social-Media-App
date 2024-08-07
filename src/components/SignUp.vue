@@ -1,36 +1,36 @@
 <template>
   <div>
     <div class="relative py-3 mt-20 sm:max-w-xl sm:mx-auto w-full">
-      <div class="relative px-4 py-10 bg-black mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
-        <div class="max-w-md mx-auto text-white">
+      <div class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+        <div class="max-w-md mx-auto text-gray-500 dark:text-white">
           <form @submit.prevent="onSubmit">
             <div class="mt-5">
               <div id="Username" class="mb-5">
-                <label for="username" class="font-semibold text-sm text-gray-400 pb-1 block">Username</label>
+                <label for="username" class="font-semibold text-sm text-gray-500 pb-1 block">Username</label>
                 <input v-model="username" v-bind="usernameAttrs" id="username" type="text"
-                  class="border rounded-lg px-3 py-2 mt-1 text-sm w-full bg-gray-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
+                  class="border border-zinc-400 dark-border rounded-lg px-3 py-2 mt-1 text-sm w-full dark:bg-zinc-700 text-gray-500 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
                 <p class="font-semibold text-xs text-red-600 pb-1 block mt-1">
                   {{ errors.username }}
                 </p>
               </div>
 
               <div id="Email" class="mb-5">
-                <label for="signup" class="font-semibold text-sm text-gray-400 pb-1 block">E-mail</label>
+                <label for="signup" class="font-semibold text-sm text-gray-500 pb-1 block">E-mail</label>
                 <input v-model="email" v-bind="emailAttrs" id="email" type="email"
-                  class="border rounded-lg px-3 py-2 mt-1 text-sm w-full bg-gray-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
+                  class="border border-zinc-400 dark-border rounded-lg px-3 py-2 mt-1 text-sm w-full dark:bg-zinc-700 text-gray-500 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
                 <p class="font-semibold text-xs text-red-600 pb-1 block mt-1">
                   {{ errors.email }}
                 </p>
               </div>
 
               <div id="Password" class="mb-5">
-                <label for="password" class="font-semibold text-sm text-gray-400 pb-1 block">Password</label>
+                <label for="password" class="font-semibold text-sm text-gray-500 pb-1 block">Password</label>
                 <input v-model="password" v-bind="passwordAttrs" id="password"
                   :type="showPassword ? 'text' : 'password'"
-                  class="border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full bg-gray-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
+                  class="border border-zinc-400 dark-border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full dark:bg-zinc-700 text-gray-500 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
                 <div class="flex gap-2">
                   <CheckBox :showPassword="showPassword" @click="showPassword = !showPassword" />
-                  <p class="font-semibold text-sm text-gray-400 pb-1 block">
+                  <p class="font-semibold text-sm text-gray-500 pb-1 block">
                     Show Password
                   </p>
                   <p class="font-semibold text-xs text-red-600 pb-1 block">
@@ -40,14 +40,14 @@
               </div>
 
               <div id="ConfirmPassword" class="mb-5">
-                <label for="passwordConfirm" class="font-semibold text-sm text-gray-400 pb-1 block">Confirm
+                <label for="passwordConfirm" class="font-semibold text-sm text-gray-500 pb-1 block">Confirm
                   Password</label>
                 <input v-model="passwordConfirm" v-bind="passwordConfirmAttrs" id="passwordConfirm"
                   :type="showPasswordConfirm ? 'text' : 'password'"
-                  class="border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full bg-gray-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
+                  class="border border-zinc-400 dark-border rounded-lg px-3 py-2 mt-1 mb-2 text-sm w-full dark:bg-zinc-700 text-gray-500 dark:text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500" />
                 <div class="flex gap-2">
                   <CheckBox :showPassword="showPasswordConfirm" @click="showPasswordConfirm = !showPasswordConfirm" />
-                  <p class="font-semibold text-sm text-gray-400 pb-1 block">
+                  <p class="font-semibold text-sm text-gray-500 pb-1 block">
                     Show Password
                   </p>
                   <p class="font-semibold text-xs text-red-600 pb-1 block">
@@ -58,8 +58,8 @@
             </div>
 
             <div>
-              <label for="fileInput" class="font-semibold text-sm text-gray-400 pb-1 block">Upload Your Profile Picture</label>
-              <input type="file" id="fileInput" class="mb-5 bg-red-600 rounded-md cursor-pointer" />
+              <label for="fileInput" class="font-semibold text-sm text-gray-500 pb-1 block">Upload Your Profile Picture</label>
+              <input type="file" id="fileInput" class="mb-5 bg-red-600 rounded-md cursor-pointer text-white" />
             </div>
 
             <div>
@@ -82,7 +82,7 @@
           <div class="flex items-center justify-between mt-4">
             <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
             <a @click="useMainStore().switchDisplay(LogIn)"
-              class="cursor-pointer text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline">or log in</a>
+              class="cursor-pointer text-xs text-gray-500 uppercase dark:text-gray-500 hover:underline">or log in</a>
             <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
           </div>
         </div>
