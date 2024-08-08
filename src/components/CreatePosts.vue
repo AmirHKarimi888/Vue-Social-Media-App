@@ -19,9 +19,35 @@
                 <div class="grid w-full max-w-xs items-center gap-1.5 cursor-pointer">
                     <label class="font-semibold text-sm text-gray-400 pb-1 block">Media</label>
                     <input id="picture" type="file"
+                        accept="image/*, video/*"
                         class="flex h-10 w-full rounded-md border border-zinc-400 bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium dark:bg-zinc-700 dark-border"
                         required />
                 </div>
+    
+                <!-- <div v-for="(media, index) in usePostsStore().filesDisplay" :key="media">
+                    <img v-if="media[0]?.type.includes('image')" :src="media[1]" class="w-20 aspect-square" alt="">
+                    <video v-else width="320" height="240" controls>
+                        <source :src="media[1]" type="video/mp4">
+                    </video>
+                    <span @click="deletePendingMedia(index)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>
+                    </span>
+
+                </div> -->
+
+                <Carousel :value="usePostsStore().filesDisplay" :numVisible="1" :numScroll="1">
+                    <template #item="slotProps">
+                        <div class="grid justify-center items-center mt-5">
+                            <img v-if="slotProps.data[0]?.type.includes('image')" :src="slotProps.data[1]" class=" w-full aspect-video" alt="">
+                            <video v-else class="w-full aspect-video" controls>
+                                <source :src="slotProps.data[1]" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="grid justify-center" @click="deletePendingMedia(slotProps.index)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>
+                        </div>
+                    </template>
+                </Carousel>
             </div>
 
             <div id="PostStatus" class="mb-5">
@@ -45,8 +71,9 @@ import * as yup from "yup";
 import ToggleSwitch from 'primevue/toggleswitch';
 import { ref } from "vue";
 import { usePostsStore } from "../stores/postManagement";
+import Carousel from "primevue/carousel";
 
-const { createPosts } = usePostsStore();
+const { createPosts, deletePendingMedia } = usePostsStore();
 
 const schema = yup.object({
   title: yup.string()
@@ -67,6 +94,7 @@ const onSubmit = handleSubmit(async (data) => {
   data = {...data, status: status.value};
   await createPosts(data);
 });
+
 </script>
 
 <style scoped></style>

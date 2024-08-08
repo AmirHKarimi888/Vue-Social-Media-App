@@ -1,6 +1,6 @@
 <template>
     <Spinner v-if="spinnerView" />
-    <li v-else v-for="post in usePostsStore().posts" :key="post?.id" class="aspect-square border border-zinc-300 dark-border]">
+    <li v-else v-for="post in usePostsStore().posts" :key="post?.id" class="aspect-square shadow-lg shadow-zinc-500 dark:border dark:shadow-none dark:border-zinc-900">
         <img class="w-full aspect-square" :src="`${VITE_PB_URL_POSTS}/${post?.id}/${post?.poster}?thumb=100x100`" alt="">
     </li>
 </template>

@@ -23,11 +23,39 @@ export const usePostsStore = defineStore("posts", () => {
         //return posts.value;
     }
 
+    const filesDisplay = ref<any[]>([]);
+    let files: any[] = [];
+
+    setTimeout(async () => {
+
+        if (window) {
+
+            const fileInputEl = document.querySelector('#FileUpload input') as any;
+        
+            fileInputEl.addEventListener("change", async () => {
+
+                let src = URL.createObjectURL(fileInputEl?.files[0]);
+
+                files.push(fileInputEl?.files[0]);
+                filesDisplay.value.push([fileInputEl?.files[0], src]);
+
+                if (!files[0]?.type.includes("image")) {
+                    files.pop();
+                    filesDisplay.value.pop();
+                    alert("First file is the poster, so it should be an image of jpg (jpeg) or png format")
+                }
+            })
+        }
+    }, 10)
+
+    const deletePendingMedia = (i: number) => {
+        files = files.filter((file, index) => index !== i ? file : null);
+        filesDisplay.value = filesDisplay.value.filter((file, index) => index !== i ? file : null);
+    }
+
     const createPosts = async (data: any) => {
 
         const { title, description, status } = data;
-
-        const fileInputEl = document.querySelector('#FileUpload input') as any;
 
         const newPost = {
             title: title,
@@ -35,7 +63,8 @@ export const usePostsStore = defineStore("posts", () => {
             contents: "",
             author: useUsersStore().loggedInUser?.id,
             authorEmail: useUsersStore().loggedInUser?.email,
-            poster: fileInputEl?.files[0],
+            poster: files[0],
+            media: files,
             views: 0,
             likes: [],
             status: status
@@ -57,5 +86,5 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    return { mainDisplay, posts, toggleDisplay, getOwnPosts, createPosts };
+    return { mainDisplay, posts, filesDisplay, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia };
 })
