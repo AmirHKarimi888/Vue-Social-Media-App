@@ -5,8 +5,34 @@ import { useUsersStore } from "../userManagement";
 import { pb } from "../../pocketbase";
 
 export const usePostsStore = defineStore("posts", () => {
-    const mainDisplay = shallowRef(PostManagement);
+    const mainDisplay = shallowRef(Feed);
     const posts = ref<any[]>([]);
+    const selectedPost = ref<any>({});
+    const selectedPostView = ref(false);
+
+    setTimeout(async () => {
+        if (window) {
+            if (location.hash.includes("dashboard")) {
+                mainDisplay.value = PostManagement;
+            } else if (location.hash.includes("posts")) {
+                let id = location.hash.replace("#posts/", "");
+                await getPost(id)
+                .then(() => selectedPostView.value = true);
+            }
+            
+            window.onhashchange = async () => {
+                if (location.hash.includes("dashboard")) {
+                    mainDisplay.value = PostManagement;
+                    selectedPost.value = {};
+                    selectedPostView.value = false;
+                } else if (location.hash.includes("posts")) {
+                    let id = location.hash.replace("#posts/", "");
+                    await getPost(id)
+                    .then(() => selectedPostView.value = true);
+                }
+            }
+        }
+    }, 10)
 
     const { updateLoggedInUserFeaturesPosts } = useUsersStore();
 
@@ -28,7 +54,7 @@ export const usePostsStore = defineStore("posts", () => {
 
     setTimeout(async () => {
 
-        if (window) {
+        if (window && document.querySelector('#FileUpload')) {
 
             const fileInputEl = document.querySelector('#FileUpload input') as any;
         
@@ -51,6 +77,11 @@ export const usePostsStore = defineStore("posts", () => {
     const deletePendingMedia = (i: number) => {
         files = files.filter((file, index) => index !== i ? file : null);
         filesDisplay.value = filesDisplay.value.filter((file, index) => index !== i ? file : null);
+    }
+
+    const emptyMediaList = () => {
+        files = [];
+        filesDisplay.value = [];
     }
 
     const createPosts = async (data: any) => {
@@ -86,5 +117,17 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    return { mainDisplay, posts, filesDisplay, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia };
+    const getPost = async (id: string) => {
+        try {
+            selectedPost.value = await pb.collection('posts').getOne(id);
+        } catch (err: any) {
+            alert(err?.message);
+        }
+    }
+
+    const closePostModal = (address: string) => {
+        location.hash = address;
+    }
+
+    return { mainDisplay, posts, selectedPost, filesDisplay, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
 })

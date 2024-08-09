@@ -1,7 +1,9 @@
 <template>
-    <Spinner v-if="spinnerView" />
-    <li v-else v-for="post in usePostsStore().posts" :key="post?.id" class="aspect-square shadow-lg shadow-zinc-500 dark:border dark:shadow-none dark:border-zinc-900">
-        <img class="w-full aspect-square" :src="`${VITE_PB_URL_POSTS}/${post?.id}/${post?.poster}?thumb=100x100`" alt="">
+    <Spinner v-if="pending" />
+    <li v-else v-for="post in usePostsStore().posts" :key="post?.id" class="aspect-square shadow-lg shadow-zinc-500 dark:border dark:shadow-none dark:border-zinc-900 cursor-pointer">
+        <a :href="`#posts/${post?.id}`">
+            <img class="w-full aspect-square" :src="`${VITE_PB_URL_POSTS}/${post?.id}/${post?.poster}?thumb=100x100`" alt="">
+        </a>
     </li>
 </template>
 
@@ -11,7 +13,7 @@ import { VITE_PB_URL_POSTS } from '../pocketbase';
 import { Spinner } from './icons';
 import { usePostsStore } from '../stores/postManagement';
 
-const spinnerView = ref(true);
+const pending = ref(true);
 
 const { getOwnPosts } = usePostsStore();
 
@@ -19,7 +21,7 @@ const { getOwnPosts } = usePostsStore();
 
 onBeforeMount(async () => {
     await getOwnPosts()
-    .then(() => spinnerView.value = false);
+    .then(() => pending.value = false);
 })
 
 </script>

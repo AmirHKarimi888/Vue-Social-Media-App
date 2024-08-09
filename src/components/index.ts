@@ -10,5 +10,6 @@ import Feed from "./Feed.vue";
 import PostManagement from "./PostManagement.vue";
 import Bookmarks from "./Bookmarks.vue";
 import Posts from "./Posts.vue";
+import Post from "./Post.vue";
 
-export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts };
+export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts, Post };

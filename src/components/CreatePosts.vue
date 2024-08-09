@@ -35,7 +35,7 @@
 
                 </div> -->
 
-                <Carousel :value="usePostsStore().filesDisplay" :numVisible="1" :numScroll="1">
+                <Carousel :value="usePostsStore().filesDisplay" :numVisible="1" :numScroll="1" :page="usePostsStore().filesDisplay.length - 1">
                     <template #item="slotProps">
                         <div class="grid justify-center items-center mt-5">
                             <img v-if="slotProps.data[0]?.type.includes('image')" :src="slotProps.data[1]" class=" w-full aspect-video" alt="">
@@ -61,6 +61,16 @@
                     Create Post
                 </button>
             </div>
+
+            <Dialog v-model:visible="pending" modal :closable="false">
+                <div class="grid justify-center p-5 text-xl">
+                    <SpinnerLg class="mx-auto" />
+                    <div class="mt-3">Uploading</div>
+                </div>
+                <div class="grid justify-center">
+                    <button @click="cancelUpload" class="rounded-md border border-red-600 text-red-600 text-sm p-1 hover:bg-red-600 hover:text-white duration-75">Cancel</button>
+                </div>
+            </Dialog>
         </div>
     </form>
 </template>
@@ -72,6 +82,10 @@ import ToggleSwitch from 'primevue/toggleswitch';
 import { ref } from "vue";
 import { usePostsStore } from "../stores/postManagement";
 import Carousel from "primevue/carousel";
+import { SpinnerLg } from "./icons";
+import Dialog from "primevue/dialog";
+
+const pending = ref(false);
 
 const { createPosts, deletePendingMedia } = usePostsStore();
 
@@ -81,7 +95,7 @@ const schema = yup.object({
     .required("title is required"),
 })
 
-const { handleSubmit, errors, defineField } = useForm({
+const { handleSubmit, errors, defineField, resetForm } = useForm({
   validationSchema: schema
 });
 
@@ -91,9 +105,20 @@ const [description, descriptionAttrs] = defineField("description");
 const status = ref(false);
 
 const onSubmit = handleSubmit(async (data) => {
+  pending.value = true;
   data = {...data, status: status.value};
-  await createPosts(data);
+  await createPosts(data)
+  .then(() => {
+    pending.value = false;
+    resetForm();
+    usePostsStore().emptyMediaList();
+    status.value = false;
+  })
 });
+
+const cancelUpload = () => {
+    window.location.reload();
+}
 
 </script>
 
