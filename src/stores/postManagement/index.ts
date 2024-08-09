@@ -10,51 +10,11 @@ export const usePostsStore = defineStore("posts", () => {
     const selectedPost = ref<any>({});
     const selectedPostView = ref(false);
 
-    setTimeout(async () => {
-        if (window) {
-            if (location.hash.includes("dashboard")) {
-                mainDisplay.value = PostManagement;
-            } else if (location.hash.includes("posts")) {
-                let id = location.hash.replace("#posts/", "");
-                await getPost(id)
-                .then(() => selectedPostView.value = true);
-            }
-            
-            window.onhashchange = async () => {
-                if (location.hash.includes("dashboard")) {
-                    mainDisplay.value = PostManagement;
-                    selectedPost.value = {};
-                    selectedPostView.value = false;
-                } else if (location.hash.includes("posts")) {
-                    let id = location.hash.replace("#posts/", "");
-                    await getPost(id)
-                    .then(() => selectedPostView.value = true);
-                }
-            }
-        }
-    }, 10)
-
-    const { updateLoggedInUserFeaturesPosts } = useUsersStore();
-
-    const toggleDisplay = (display: any) => {
-        mainDisplay.value = display;
-    }
-
-    const getOwnPosts = async () => {
-        const id = useUsersStore().loggedInUser?.id
-        posts.value = await pb.collection('posts').getFullList({
-            filter: "author = " + "'" + id + "'" + "",
-            sort: "-created"
-        })
-        //return posts.value;
-    }
-
     const filesDisplay = ref<any[]>([]);
     let files: any[] = [];
 
-    setTimeout(async () => {
-
-        if (window && document.querySelector('#FileUpload')) {
+    const activeMediaUploadingSystem = () => {
+        if (document.querySelector('#FileUpload')) {
 
             const fileInputEl = document.querySelector('#FileUpload input') as any;
         
@@ -72,7 +32,76 @@ export const usePostsStore = defineStore("posts", () => {
                 }
             })
         }
-    }, 10)
+    }
+
+    setTimeout(async () => {
+        if (window) {
+
+            //Saves previous page address to be used in future loads of the page
+            "initialAddress" in localStorage ? null : localStorage.setItem("initialAddress", "");
+
+            //Determines the views by hash for the first time
+            if(location.hash === "") {
+                mainDisplay.value = Feed;
+                localStorage.setItem("initialAddress", "");
+
+            } else if (location.hash.includes("dashboard")) {
+                mainDisplay.value = PostManagement;
+                localStorage.setItem("initialAddress", "dashboard");
+
+            } else if (location.hash.includes("posts")) {
+                localStorage.getItem("initialAddress") === "dashboard" ? mainDisplay.value = PostManagement : null;
+                let id = location.hash.replace("#posts/", "");
+                await getPost(id)
+                .then(() => selectedPostView.value = true);
+            }
+
+            
+            //Checks hash changes after the dom is created
+            window.onhashchange = async () => {
+
+                //Uploading system gets reactivated after hash changes
+                activeMediaUploadingSystem();
+
+                //Changes the views after the hash changes based on it
+                if(location.hash === "") {
+                    mainDisplay.value = Feed;
+                    localStorage.setItem("initialAddress", "");
+
+                } else if (location.hash.includes("dashboard")) {
+                    mainDisplay.value = PostManagement;
+                    localStorage.setItem("initialAddress", "dashboard");
+
+                } else if (location.hash.includes("posts")) {
+                    let id = location.hash.replace("#posts/", "");
+                    await getPost(id)
+                    .then(() => selectedPostView.value = true);
+                }
+            }
+        }
+    })
+
+    
+    //Activates uploading system on initial rendering of whole dom
+    setTimeout(async () => {
+        activeMediaUploadingSystem();
+    })
+
+
+    const { updateLoggedInUserFeaturesPosts } = useUsersStore();
+
+    const toggleDisplay = (display: any) => {
+        mainDisplay.value = display;
+    }
+
+    const getOwnPosts = async () => {
+        const id = useUsersStore().loggedInUser?.id
+        posts.value = await pb.collection('posts').getFullList({
+            filter: "author = " + "'" + id + "'" + "",
+            sort: "-created"
+        })
+        //return posts.value;
+    }
 
     const deletePendingMedia = (i: number) => {
         files = files.filter((file, index) => index !== i ? file : null);
@@ -125,8 +154,9 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    const closePostModal = (address: string) => {
-        location.hash = address;
+    const closePostModal = () => {
+        selectedPostView.value = false;
+        location.hash = localStorage.getItem("initialAddress") as any;
     }
 
     return { mainDisplay, posts, selectedPost, filesDisplay, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };

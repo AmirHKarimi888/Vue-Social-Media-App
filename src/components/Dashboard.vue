@@ -18,7 +18,7 @@
         <div class="lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
             <div class="posts rounded-md overflow-auto">
                 <component :is="usePostsStore().mainDisplay"></component>
-                <div @click.self="usePostsStore().closePostModal('dashboard')" v-if="usePostsStore().selectedPostView" class="fixed top-0 left-0 w-full h-screen bg-zinc-900/50">
+                <div @click.self="usePostsStore().closePostModal()" v-if="usePostsStore().selectedPostView" class="fixed top-0 left-0 w-full h-screen bg-zinc-900/50">
                     <Dialog class="lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] h-[80%] rounded-none" v-model:visible="usePostsStore().selectedPostView" :closable="false">
                         <Post />
                     </Dialog>
