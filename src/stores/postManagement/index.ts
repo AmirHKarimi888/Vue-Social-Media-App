@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, watch } from "vue";
 import { Feed, PostManagement } from "../../components";
 import { useUsersStore } from "../userManagement";
 import { pb } from "../../pocketbase";
@@ -10,6 +10,7 @@ export const usePostsStore = defineStore("posts", () => {
     const selectedPost = ref<any>({});
     const selectedPostView = ref(false);
 
+    const createPostsView = ref(false);
     const filesDisplay = ref<any[]>([]);
     let files: any[] = [];
 
@@ -37,6 +38,8 @@ export const usePostsStore = defineStore("posts", () => {
     setTimeout(async () => {
         if (window) {
 
+            createPostsView.value = true;
+
             //Saves previous page address to be used in future loads of the page
             "initialAddress" in localStorage ? null : localStorage.setItem("initialAddress", "");
 
@@ -57,11 +60,12 @@ export const usePostsStore = defineStore("posts", () => {
             }
 
             
-            //Uploading system gets reactivated after hash changes
-            activeMediaUploadingSystem();
 
             //Checks hash changes after the dom is created
             window.onhashchange = async () => {
+
+                createPostsView.value = false;
+                setTimeout(() => createPostsView.value = true);
 
                 //Changes the views after the hash changes based on it
                 if(location.hash === "") {
@@ -81,13 +85,12 @@ export const usePostsStore = defineStore("posts", () => {
         }
     })
 
-    
-    //Activates uploading system on initial rendering of whole dom
-    setTimeout(async () => {
+    //Watches for re renders of CreatePosts component
+    watch(createPostsView, () => {
         activeMediaUploadingSystem();
     })
 
-
+    
     const { updateLoggedInUserFeaturesPosts } = useUsersStore();
 
     const toggleDisplay = (display: any) => {
@@ -159,5 +162,5 @@ export const usePostsStore = defineStore("posts", () => {
         location.hash = localStorage.getItem("initialAddress") as any;
     }
 
-    return { mainDisplay, posts, selectedPost, filesDisplay, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
+    return { mainDisplay, posts, selectedPost, filesDisplay, createPostsView, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
 })
