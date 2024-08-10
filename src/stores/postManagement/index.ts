@@ -57,11 +57,11 @@ export const usePostsStore = defineStore("posts", () => {
             }
 
             
+            //Uploading system gets reactivated after hash changes
+            activeMediaUploadingSystem();
+
             //Checks hash changes after the dom is created
             window.onhashchange = async () => {
-
-                //Uploading system gets reactivated after hash changes
-                activeMediaUploadingSystem();
 
                 //Changes the views after the hash changes based on it
                 if(location.hash === "") {

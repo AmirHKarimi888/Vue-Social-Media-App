@@ -18,11 +18,6 @@
         <div class="lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
             <div class="posts rounded-md overflow-auto">
                 <component :is="usePostsStore().mainDisplay"></component>
-                <div @click.self="usePostsStore().closePostModal()" v-if="usePostsStore().selectedPostView" class="fixed top-0 left-0 w-full h-screen bg-zinc-900/50">
-                    <Dialog class="lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] h-[80%] rounded-none" v-model:visible="usePostsStore().selectedPostView" :closable="false">
-                        <Post />
-                    </Dialog>
-                </div>
             </div>
         </div>
 
@@ -31,13 +26,20 @@
 
             </div>
         </div>
+
+        <div @click.self="usePostsStore().closePostModal()" v-if="usePostsStore().selectedPostView" class="z-50 fixed top-0 left-0 w-full h-screen grid justify-center items-center bg-zinc-900/50">
+            <div id="Post" class="mx-auto bg-zinc-100 dark:bg-zinc-900 lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] h-[80%] box-border overflow-hidden py-5">
+                <Post />
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Dialog from 'primevue/dialog';
 import { Drawer, NavBar, Options, Post, Profile } from '.';
 import { usePostsStore } from '../stores/postManagement';
+import { SpinnerLg } from './icons';
+
 </script>
 
 <style scoped>
