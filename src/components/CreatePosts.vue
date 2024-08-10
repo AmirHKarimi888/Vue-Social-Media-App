@@ -15,7 +15,7 @@
                     />
             </div>
 
-            <div id="FileUpload" class="mb-5">
+            <div id="FileUpload" class="mb-5" v-if="usePostsStore().postMediaUploadView">
                 <div class="grid w-full max-w-xs items-center gap-1.5 cursor-pointer">
                     <label class="font-semibold text-sm text-gray-400 pb-1 block">Media</label>
                     <input id="picture" type="file"
@@ -43,7 +43,7 @@
                                 <source :src="slotProps.data[1]" type="video/mp4">
                             </video>
                         </div>
-                        <div class="grid justify-center" @click="deletePendingMedia(slotProps.index)">
+                        <div class="grid justify-center cursor-pointer" @click="deletePendingMedia(slotProps.index)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"/></svg>
                         </div>
                     </template>

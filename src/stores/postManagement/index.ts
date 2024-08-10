@@ -6,11 +6,13 @@ import { pb } from "../../pocketbase";
 
 export const usePostsStore = defineStore("posts", () => {
     const mainDisplay = shallowRef(Feed);
+
     const posts = ref<any[]>([]);
+    const { updateLoggedInUserFeaturesPosts } = useUsersStore();
     const selectedPost = ref<any>({});
     const selectedPostView = ref(false);
 
-    const createPostsView = ref(false);
+    const postMediaUploadView = ref(false);
     const filesDisplay = ref<any[]>([]);
     let files: any[] = [];
 
@@ -38,8 +40,6 @@ export const usePostsStore = defineStore("posts", () => {
     setTimeout(async () => {
         if (window) {
 
-            createPostsView.value = true;
-
             //Saves previous page address to be used in future loads of the page
             "initialAddress" in localStorage ? null : localStorage.setItem("initialAddress", "");
 
@@ -50,6 +50,7 @@ export const usePostsStore = defineStore("posts", () => {
 
             } else if (location.hash.includes("dashboard")) {
                 mainDisplay.value = PostManagement;
+                postMediaUploadView.value = true;
                 localStorage.setItem("initialAddress", "dashboard");
 
             } else if (location.hash.includes("posts")) {
@@ -64,8 +65,9 @@ export const usePostsStore = defineStore("posts", () => {
             //Checks hash changes after the dom is created
             window.onhashchange = async () => {
 
-                createPostsView.value = false;
-                setTimeout(() => createPostsView.value = true);
+                filesDisplay.value = [];
+                files = [];
+                postMediaUploadView.value = false;
 
                 //Changes the views after the hash changes based on it
                 if(location.hash === "") {
@@ -74,6 +76,7 @@ export const usePostsStore = defineStore("posts", () => {
 
                 } else if (location.hash.includes("dashboard")) {
                     mainDisplay.value = PostManagement;
+                    postMediaUploadView.value = true;
                     localStorage.setItem("initialAddress", "dashboard");
 
                 } else if (location.hash.includes("posts")) {
@@ -86,12 +89,13 @@ export const usePostsStore = defineStore("posts", () => {
     })
 
     //Watches for re renders of CreatePosts component
-    watch(createPostsView, () => {
-        activeMediaUploadingSystem();
+    watch(postMediaUploadView, () => {
+        if (postMediaUploadView.value) {
+            activeMediaUploadingSystem();
+        }
     })
 
-    
-    const { updateLoggedInUserFeaturesPosts } = useUsersStore();
+
 
     const toggleDisplay = (display: any) => {
         mainDisplay.value = display;
@@ -162,5 +166,5 @@ export const usePostsStore = defineStore("posts", () => {
         location.hash = localStorage.getItem("initialAddress") as any;
     }
 
-    return { mainDisplay, posts, selectedPost, filesDisplay, createPostsView, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
+    return { mainDisplay, posts, selectedPost, filesDisplay, postMediaUploadView, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
 })
