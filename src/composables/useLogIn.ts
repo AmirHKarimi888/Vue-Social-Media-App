@@ -8,7 +8,6 @@ export default function () {
     const logIn = async (data: any) => {
 
         const { updateLoggedInUser } = useUsersStore();
-        const { switchDisplay } = useMainStore();
 
         const { email, password } = data;
 
@@ -16,7 +15,7 @@ export default function () {
             await pb.collection("users").authWithPassword(email, password)
             .then(() => pb.authStore.exportToCookie())
             .then(() => updateLoggedInUser())
-            .then(() => switchDisplay(Dashboard))
+            .then(() => useMainStore().mainDisplay = Dashboard)
         } catch (error: any) {
             alert(error.message);
         }

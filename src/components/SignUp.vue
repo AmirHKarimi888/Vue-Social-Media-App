@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="relative py-3 mt-20 sm:max-w-xl sm:mx-auto w-full">
+  <div class="w-full h-screen flex justify-center items-center">
+    <div class="py-3 sm:max-w-xl sm:mx-auto w-full">
       <div class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
         <div class="max-w-md mx-auto text-gray-500 dark:text-white">
           <form @submit.prevent="onSubmit">
@@ -57,14 +57,16 @@
               </div>
             </div>
 
-            <div>
+            <div class="mb-5">
               <label for="fileInput" class="font-semibold text-sm text-gray-500 pb-1 block">Upload Your Profile Picture</label>
-              <input type="file" id="fileInput" class="mb-5 bg-red-600 rounded-md cursor-pointer text-white" />
+              <input id="fileInput" type="file" accept="image/*, video/*"
+              class="flex h-10 w-full rounded-md border border-zinc-400 bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium dark:bg-zinc-700 dark-border cursor-pointer"
+              />
             </div>
 
             <div>
               <button type="submit"
-                class="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+              class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                 Sign Up
               </button>
             </div>
@@ -81,7 +83,7 @@
 
           <div class="flex items-center justify-between mt-4">
             <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
-            <a @click="useMainStore().switchDisplay(LogIn)"
+            <a @click="useMainStore().mainDisplay = LogIn"
               class="cursor-pointer text-xs text-gray-500 uppercase dark:text-gray-500 hover:underline">or log in</a>
             <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
           </div>

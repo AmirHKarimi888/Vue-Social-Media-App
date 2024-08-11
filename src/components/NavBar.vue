@@ -1,6 +1,6 @@
 <template>
     <div id="Navbar" class="lg:hidden">
-        <nav class="w-full h-[63px] bg-zinc-100 dark:bg-black border-b dark-border fixed z-50 flex items-center">
+        <nav class="w-full h-[63px] bg-zinc-100 dark:bg-black border-b border-zinc-300 dark-border fixed z-50 flex items-center">
             <Menu class="ml-5 text-3xl cursor-pointer hidden max-[767px]:block" @click="useMainStore().toggleDrawer" />
 
             <form class="max-w-lg mx-auto">

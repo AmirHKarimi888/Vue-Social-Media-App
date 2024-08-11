@@ -4,11 +4,9 @@ import { useMainStore } from "../stores/main";
 
 export default function () {
 
-    const { switchDisplay } = useMainStore();
-
     const logOut = () => {
         pb.authStore.clear();
-        switchDisplay(LogIn);
+        useMainStore().mainDisplay = LogIn;
     }
 
     return logOut;

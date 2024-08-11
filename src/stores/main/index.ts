@@ -1,16 +1,13 @@
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
-import { Dashboard, LogIn } from "../../components";
+import { Dashboard, Feed, LogIn, PostManagement } from "../../components";
 import { useUsersStore } from "../userManagement";
 
 export const useMainStore = defineStore("main", () => {
     const mainDisplay = shallowRef(useUsersStore().isLoggedIn ? Dashboard : LogIn);
+    const dashboardMainDisplay = shallowRef(PostManagement);
     const isDark = ref(localStorage.getItem("theme") === "dark" ? true : false);
     const drawerView = ref(false);
-
-    const switchDisplay = (comp: any) => {
-        mainDisplay.value = comp;
-    }
 
     const toggleTheme = () => {
         if (localStorage.getItem("theme") === "dark") {
@@ -24,5 +21,5 @@ export const useMainStore = defineStore("main", () => {
     
     const toggleDrawer = () => drawerView.value = !drawerView.value;
 
-    return { mainDisplay, isDark, drawerView, switchDisplay, toggleTheme, toggleDrawer };
+    return { mainDisplay, dashboardMainDisplay, isDark, drawerView, toggleTheme, toggleDrawer };
 })

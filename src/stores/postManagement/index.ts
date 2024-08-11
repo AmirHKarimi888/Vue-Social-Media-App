@@ -1,105 +1,19 @@
 import { defineStore } from "pinia";
-import { ref, shallowRef, watch } from "vue";
-import { Feed, PostManagement } from "../../components";
+import { ref } from "vue";
 import { useUsersStore } from "../userManagement";
 import { pb } from "../../pocketbase";
 
 export const usePostsStore = defineStore("posts", () => {
-    const mainDisplay = shallowRef(Feed);
 
     const posts = ref<any[]>([]);
+    const allPostsPending = ref(false);
     const { updateLoggedInUserFeaturesPosts } = useUsersStore();
+
     const selectedPost = ref<any>({});
     const selectedPostView = ref(false);
-
-    const postMediaUploadView = ref(false);
-    const filesDisplay = ref<any[]>([]);
-    let files: any[] = [];
-
-    const activeMediaUploadingSystem = () => {
-        if (document.querySelector('#FileUpload')) {
-
-            const fileInputEl = document.querySelector('#FileUpload input') as any;
-        
-            fileInputEl.addEventListener("change", async () => {
-
-                let src = URL.createObjectURL(fileInputEl?.files[0]);
-
-                files.push(fileInputEl?.files[0]);
-                filesDisplay.value.push([fileInputEl?.files[0], src]);
-
-                if (!files[0]?.type.includes("image")) {
-                    files.pop();
-                    filesDisplay.value.pop();
-                    alert("First file is the poster, so it should be an image of jpg (jpeg) or png format")
-                }
-            })
-        }
-    }
-
-    setTimeout(async () => {
-        if (window) {
-
-            //Saves previous page address to be used in future loads of the page
-            "initialAddress" in localStorage ? null : localStorage.setItem("initialAddress", "");
-
-            //Determines the views by hash for the first time
-            if(location.hash === "") {
-                mainDisplay.value = Feed;
-                localStorage.setItem("initialAddress", "");
-
-            } else if (location.hash.includes("dashboard")) {
-                mainDisplay.value = PostManagement;
-                postMediaUploadView.value = true;
-                localStorage.setItem("initialAddress", "dashboard");
-
-            } else if (location.hash.includes("posts")) {
-                localStorage.getItem("initialAddress") === "dashboard" ? mainDisplay.value = PostManagement : null;
-                let id = location.hash.replace("#posts/", "");
-                await getPost(id)
-                .then(() => selectedPostView.value = true);
-            }
-
-            
-
-            //Checks hash changes after the dom is created
-            window.onhashchange = async () => {
-
-                filesDisplay.value = [];
-                files = [];
-                postMediaUploadView.value = false;
-
-                //Changes the views after the hash changes based on it
-                if(location.hash === "") {
-                    mainDisplay.value = Feed;
-                    localStorage.setItem("initialAddress", "");
-
-                } else if (location.hash.includes("dashboard")) {
-                    mainDisplay.value = PostManagement;
-                    postMediaUploadView.value = true;
-                    localStorage.setItem("initialAddress", "dashboard");
-
-                } else if (location.hash.includes("posts")) {
-                    let id = location.hash.replace("#posts/", "");
-                    await getPost(id)
-                    .then(() => selectedPostView.value = true);
-                }
-            }
-        }
-    })
-
-    //Watches for re renders of CreatePosts component
-    watch(postMediaUploadView, () => {
-        if (postMediaUploadView.value) {
-            activeMediaUploadingSystem();
-        }
-    })
-
-
-
-    const toggleDisplay = (display: any) => {
-        mainDisplay.value = display;
-    }
+    const selectedPostPending = ref(false);
+    
+    const createPostsView = ref(false);
 
     const getOwnPosts = async () => {
         const id = useUsersStore().loggedInUser?.id
@@ -110,19 +24,9 @@ export const usePostsStore = defineStore("posts", () => {
         //return posts.value;
     }
 
-    const deletePendingMedia = (i: number) => {
-        files = files.filter((file, index) => index !== i ? file : null);
-        filesDisplay.value = filesDisplay.value.filter((file, index) => index !== i ? file : null);
-    }
-
-    const emptyMediaList = () => {
-        files = [];
-        filesDisplay.value = [];
-    }
-
     const createPosts = async (data: any) => {
 
-        const { title, description, status } = data;
+        const { title, description, files, status } = data;
 
         const newPost = {
             title: title,
@@ -161,10 +65,5 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    const closePostModal = () => {
-        selectedPostView.value = false;
-        location.hash = localStorage.getItem("initialAddress") as any;
-    }
-
-    return { mainDisplay, posts, selectedPost, filesDisplay, postMediaUploadView, selectedPostView, toggleDisplay, getOwnPosts, createPosts, deletePendingMedia, emptyMediaList, closePostModal };
+    return { posts, allPostsPending, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getPost, createPosts };
 })
