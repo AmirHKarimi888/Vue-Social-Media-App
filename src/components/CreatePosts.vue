@@ -88,7 +88,7 @@ const schema = yup.object({
         .required("title is required"),
 })
 
-const { handleSubmit, errors, defineField, resetForm } = useForm({
+const { handleSubmit, defineField, resetForm } = useForm({
     validationSchema: schema
 });
 

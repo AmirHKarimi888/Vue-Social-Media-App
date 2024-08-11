@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
-import { Dashboard, Feed, LogIn, PostManagement } from "../../components";
+import { Dashboard, LogIn, PostManagement } from "../../components";
 import { useUsersStore } from "../userManagement";
 
 export const useMainStore = defineStore("main", () => {
