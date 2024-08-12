@@ -62,7 +62,9 @@ export const usePostsStore = defineStore("posts", () => {
         try {
             selectedPost.value = await pb.collection('posts').getOne(id);
         } catch (err: any) {
-            alert(err?.message);
+            console.log(err?.message);
+            selectedPostPending.value = false;
+            selectedPostView.value = false;
         }
     }
 
@@ -98,5 +100,15 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    return { posts, allPostsPending, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getPost, createPosts, likePost, bookmarkPost };
+    const openPostModal = async (id: string) => {
+        selectedPostPending.value = true;
+
+        await getPost(id)
+        .then(() => {
+            selectedPostPending.value = false;
+            selectedPostView.value = true
+        });
+    }
+
+    return { posts, allPostsPending, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getPost, createPosts, likePost, bookmarkPost, openPostModal };
 })

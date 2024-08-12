@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { usePostsStore } from './stores/postManagement';
 
 
-onMounted(() => {
+onMounted(async () => {
   "theme" in localStorage ? null : localStorage.setItem("theme", "light");
 
   if (localStorage.getItem("theme") === "dark") {
@@ -10,6 +11,12 @@ onMounted(() => {
   } else if (localStorage.getItem("theme") === "light") {
     document.documentElement.classList.remove("dark");
   }
+
+
+  if (location.hash && !usePostsStore().selectedPostView) {
+    await usePostsStore().openPostModal(location.hash.replace("#", ""));
+  }
+
 })
 </script>
 

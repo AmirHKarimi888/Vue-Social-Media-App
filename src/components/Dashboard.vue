@@ -51,6 +51,7 @@ import { useMainStore } from '../stores/main';
 
 const closePostModal = () => {
     usePostsStore().selectedPostView = false;
+    location.hash = "";
 }
 </script>
 
