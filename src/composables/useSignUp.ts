@@ -46,7 +46,8 @@ export default function () {
                         username: newUser.username,
                         email: newUser.email,
                         followings: [],
-                        followers: []
+                        followers: [],
+                        bookmarks: []
                     })
                 })
                 .then(async () => {

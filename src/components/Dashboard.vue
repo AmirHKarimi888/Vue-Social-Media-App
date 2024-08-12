@@ -29,10 +29,10 @@
         </div>
 
         <div @click.self="closePostModal()" v-if="usePostsStore().selectedPostView"
-            class="z-50 fixed top-0 left-0 w-full h-screen grid justify-center items-center bg-zinc-900/50">
+            class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-center bg-zinc-900/50">
             <div id="Post"
-                class="mx-auto bg-zinc-100 dark:bg-zinc-900 lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] h-[80%] box-border overflow-hidden py-5">
-                <Post />
+                class="mx-auto bg-zinc-100 dark:bg-zinc-900 lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] max-h-[90%] box-border overflow-auto">
+                <Post @close="closePostModal" />
             </div>
         </div>
         <div v-if="usePostsStore().selectedPostPending"

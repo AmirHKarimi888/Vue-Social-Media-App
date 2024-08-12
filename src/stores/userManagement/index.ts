@@ -7,6 +7,8 @@ export const useUsersStore = defineStore("users", () => {
     const loggedInUser = ref(pb.authStore.model);
     const loggedInUserFeatures = ref<any>();
 
+    const selectedUser = ref<any>({});
+
     const updateLoggedInUser = () => {
         isLoggedIn.value = pb.authStore.isValid;
         loggedInUser.value = pb.authStore.model;
@@ -25,12 +27,20 @@ export const useUsersStore = defineStore("users", () => {
     }
 
     const updateLoggedInUserFeaturesPosts = async (postId: string) => {
-        await pb.collection("users_features").update(loggedInUserFeatures.value?.id, {
-            posts: [...loggedInUserFeatures.value?.posts, postId]
-        })
-        //used to update loggedInUserFeatures reactive varieble to be updated in dom
-        .then(async () => await getLoggedInUserFeatures())
+        try {
+            await pb.collection("users_features").update(loggedInUserFeatures.value?.id, {
+                posts: [...loggedInUserFeatures.value?.posts, postId]
+            })
+            //used to update loggedInUserFeatures reactive varieble to be updated in dom
+            .then(async () => await getLoggedInUserFeatures())
+        } catch (err: any) {
+            alert(err?.message);
+        }
     }
 
-    return { isLoggedIn, loggedInUser, loggedInUserFeatures, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts };
+    const getUser = async (id: string) => {
+        selectedUser.value = await pb.collection('users').getOne(id);
+    }
+
+    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser };
 })

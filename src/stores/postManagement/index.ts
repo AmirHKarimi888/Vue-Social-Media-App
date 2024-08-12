@@ -38,6 +38,7 @@ export const usePostsStore = defineStore("posts", () => {
             media: files,
             views: 0,
             likes: [],
+            comments: [],
             status: status
         };
 
@@ -65,5 +66,37 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    return { posts, allPostsPending, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getPost, createPosts };
+    const likePost = async (post: any) => {
+        try {
+            let likes = [];
+            if (post?.likes.includes(useUsersStore().loggedInUser?.id)) {
+                likes = post?.likes.filter((like: any) => like !== useUsersStore().loggedInUser?.id);
+            } else {
+                likes = [...post?.likes, useUsersStore().loggedInUser?.id]
+            }
+            await pb.collection("posts").update(post?.id, {
+                likes: likes
+            })
+        } catch (err: any) {
+            alert(err?.message);
+        }
+    }
+
+    const bookmarkPost = async (post: any) => {
+        try {
+            let bookmarks = [];
+            if (useUsersStore().loggedInUserFeatures?.bookmarks.includes(post?.id)) {
+                bookmarks = useUsersStore().loggedInUserFeatures?.bookmarks.filter((bookmark: any) => bookmark !== post?.id);
+            } else {
+                bookmarks = [...useUsersStore().loggedInUserFeatures?.bookmarks, post?.id]
+            }
+            await pb.collection("users_features").update(useUsersStore().loggedInUserFeatures?.id, {
+                bookmarks: bookmarks
+            })
+        } catch (err: any) {
+            alert(err?.message);
+        }
+    }
+
+    return { posts, allPostsPending, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getPost, createPosts, likePost, bookmarkPost };
 })
