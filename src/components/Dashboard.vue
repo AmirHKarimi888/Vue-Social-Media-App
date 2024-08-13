@@ -16,7 +16,7 @@
             </div>
         </div>
 
-        <div class="lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
+        <div class="w-full lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
             <div class="posts rounded-md overflow-auto">
                 <component :is="useMainStore().dashboardMainDisplay"></component>
             </div>
@@ -31,7 +31,7 @@
         <div @click.self="closePostModal()" v-if="usePostsStore().selectedPostView"
             class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-center bg-zinc-900/50">
             <div id="Post"
-                class="mx-auto bg-zinc-100 dark:bg-zinc-900 lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] max-h-[90%] box-border overflow-auto">
+                class="mx-auto bg-zinc-100 dark:bg-zinc-900 lg:w-[70%] md:w-[80%] sm:w-[90%] max-sm:w-[95%] max-h-[100%] box-border overflow-auto">
                 <Post @close="closePostModal" />
             </div>
         </div>

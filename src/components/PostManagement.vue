@@ -15,7 +15,7 @@
             <div v-if="usePostsStore().createPostsView" @click.self="usePostsStore().createPostsView = false"
                 class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-center bg-zinc-900/50">
                 <div
-                    class="grid justify-center items-center bg-zinc-100 dark:bg-black lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
+                    class="p-3 bg-zinc-100 dark:bg-zinc-900 lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] max-h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
                     <CreatePosts />
                 </div>
             </div>
@@ -42,6 +42,7 @@ onBeforeMount(async () => {
     usePostsStore().allPostsPending = true;
     await getOwnPosts()
         .then(() => usePostsStore().allPostsPending = false)
+        .then(() => console.log(usePostsStore().posts))
 })
 </script>
 

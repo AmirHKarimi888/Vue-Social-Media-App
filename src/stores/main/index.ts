@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 import { ref, shallowRef } from "vue";
-import { Dashboard, LogIn, PostManagement } from "../../components";
+import { Dashboard, Feed, LogIn, PostManagement } from "../../components";
 import { useUsersStore } from "../userManagement";
 
 export const useMainStore = defineStore("main", () => {
     const mainDisplay = shallowRef(useUsersStore().isLoggedIn ? Dashboard : LogIn);
-    const dashboardMainDisplay = shallowRef(PostManagement);
+    const dashboardMainDisplay = shallowRef(Feed);
     const isDark = ref(localStorage.getItem("theme") === "dark" ? true : false);
     const drawerView = ref(false);
 

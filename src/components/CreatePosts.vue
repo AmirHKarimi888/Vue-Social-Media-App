@@ -1,6 +1,12 @@
 <template>
     <form @submit.prevent="onSubmit">
-        <div class="mt-5 p-5 w-full text-zinc-700 dark:text-white">
+        <div class="w-full p-3 text-zinc-700 dark:text-white">
+            <div class="w-full cursor-pointer grid justify-end mb-3" @click="usePostsStore().createPostsView = false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="" height="32" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z" />
+                </svg>
+            </div>
             <div id="PostTitle" class="mb-5">
                 <label class="font-semibold text-sm text-gray-400 pb-1 block">Title</label>
                 <input v-model="title" v-bind="titleAttrs" id="title" type="text"
@@ -54,7 +60,7 @@
                 </button>
             </div>
 
-            <Dialog v-model:visible="pending" modal :closable="false">
+            <Dialog v-model:visible="createPostPending" modal :closable="false">
                 <div class="grid justify-center p-5 text-xl">
                     <SpinnerLg class="mx-auto" />
                     <div class="mt-3">Uploading</div>
@@ -78,7 +84,7 @@ import Carousel from "primevue/carousel";
 import { SpinnerLg } from "./icons";
 import Dialog from "primevue/dialog";
 
-const pending = ref(false);
+const createPostPending = ref(false);
 
 const { createPosts } = usePostsStore();
 
@@ -119,17 +125,24 @@ const deletePendingMedia = (i: number) => {
 }
 
 const onSubmit = handleSubmit(async (data) => {
-    pending.value = true;
+    createPostPending.value = true;
     data = { ...data, files: files, status: status.value };
-    await createPosts(data)
+
+    try {
+        await createPosts(data)
         .then(() => {
-            pending.value = false;
+            createPostPending.value = false;
             resetForm();
             status.value = false;
             files = [];
             filesDisplay.value = [];
             usePostsStore().createPostsView = false;
         })
+        
+    } catch (err: any) {
+        createPostPending.value = false;
+
+    }
 });
 
 const cancelUpload = () => {
