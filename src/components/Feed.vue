@@ -14,7 +14,6 @@
 import { onBeforeMount } from 'vue';
 import { usePostsStore } from '../stores/postManagement';
 import { Posts } from '.';
-import { SpinnerLg } from './icons';
 import Button from 'primevue/button';
 
 let pageNum = 1;
