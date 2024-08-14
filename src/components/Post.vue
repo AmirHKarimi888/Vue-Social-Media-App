@@ -4,14 +4,17 @@
         <div class="px-10 flex justify-between items-center mb-1">
             <div class="flex items-center gap-3">
                 <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
-                    :src="useUsersStore().selectedUser?.avatar ? useUsersStore().selectedUser?.avatar : useUsersStore().selectedUser?.alternativeAvatar"
+                    :src="selectedPost?.authorDetails ? selectedPost?.authorDetails?.avatar ? selectedPost?.authorDetails?.avatar : selectedPost?.authorDetails?.alternativeAvatar : selectedUser?.avatar ? selectedUser?.avatar : selectedUser?.alternativeAvatar"
                     alt="avatar" />
                 <span class="flex flex-col font-bold">
-                    {{ useUsersStore().selectedUser?.username }}
+                    {{ selectedPost?.authorDetails ? selectedPost?.authorDetails?.username : selectedUser?.username }}
                     <span class="text-xs text-zinc-500">{{ created }}</span>
                     <span class="text-xs text-zinc-500 flex items-center gap-1">
-                        {{ usePostsStore().selectedPost?.views }}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="currentColor" d="M12 16q1.875 0 3.188-1.312T16.5 11.5t-1.312-3.187T12 7T8.813 8.313T7.5 11.5t1.313 3.188T12 16m0-1.8q-1.125 0-1.912-.788T9.3 11.5t.788-1.912T12 8.8t1.913.788t.787 1.912t-.787 1.913T12 14.2m0 4.8q-3.65 0-6.65-2.037T1 11.5q1.35-3.425 4.35-5.462T12 4t6.65 2.038T23 11.5q-1.35 3.425-4.35 5.463T12 19m0-2q2.825 0 5.188-1.487T20.8 11.5q-1.25-2.525-3.613-4.012T12 6T6.813 7.488T3.2 11.5q1.25 2.525 3.613 4.013T12 17"/></svg>
+                        {{ selectedPost?.views }}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12 16q1.875 0 3.188-1.312T16.5 11.5t-1.312-3.187T12 7T8.813 8.313T7.5 11.5t1.313 3.188T12 16m0-1.8q-1.125 0-1.912-.788T9.3 11.5t.788-1.912T12 8.8t1.913.788t.787 1.912t-.787 1.913T12 14.2m0 4.8q-3.65 0-6.65-2.037T1 11.5q1.35-3.425 4.35-5.462T12 4t6.65 2.038T23 11.5q-1.35 3.425-4.35 5.463T12 19m0-2q2.825 0 5.188-1.487T20.8 11.5q-1.25-2.525-3.613-4.012T12 6T6.813 7.488T3.2 11.5q1.25 2.525 3.613 4.013T12 17" />
+                        </svg>
                     </span>
                 </span>
             </div>
@@ -41,7 +44,10 @@
                     <Button v-if="useUsersStore().selectedUser?.id === useUsersStore().loggedInUser?.id"
                         @click="requireConfirmation($event)"
                         class="text-xs text-white p-2 bg-red-600 rounded-lg cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z" />
+                        </svg>
                     </Button>
                 </div>
                 <span class="cursor-pointer" @click="emit('close')">
@@ -126,17 +132,25 @@ import { useUsersStore } from '../stores/userManagement';
 import ConfirmPopup from 'primevue/confirmpopup';
 import { useConfirm } from 'primevue/useconfirm';
 import Button from 'primevue/button';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['close']);
 
-const { getPost, getOwnPosts, likePost, viewPost, bookmarkPost, deletePost } = usePostsStore();
+const userStore = useUsersStore();
+const postStore = usePostsStore();
+
+const { selectedPost, posts } = storeToRefs(postStore);
+const { likePost, viewPost, bookmarkPost, deletePost } = usePostsStore();
+
+const { selectedUser, loggedInUser } = storeToRefs(userStore);
 const { getLoggedInUserFeatures, getUser } = useUsersStore();
+
 const confirm = useConfirm();
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "Septempber", "October", "November", "December"];
 
 const created = computed(() => {
-    let dateList = usePostsStore().selectedPost?.created.split("-");
+    let dateList = selectedPost.value?.created.split("-");
     let year = dateList[0];
     let month = months[+dateList[1] - 1];
     let day = dateList[2].split(" ")[0]
@@ -144,7 +158,14 @@ const created = computed(() => {
 })
 
 onBeforeMount(async () => {
-    await getUser(usePostsStore().selectedPost?.author);
+    await getUser(selectedPost.value?.author);
+    // if (!posts.value[0]?.authorDetails) {
+    //     await getUser(selectedPost.value?.author);
+
+    // } else {
+    //     selectedPost.value = posts.value.find(p => p?.id === selectedPost.value?.id);
+    //     selectedPost.value = { ...selectedPost.value, views: +selectedPost.value?.views };
+    // }
 })
 
 onMounted(async () => {
@@ -167,7 +188,7 @@ onMounted(async () => {
     touchPad?.addEventListener("touchend", setNavigatorBtnsClass);
 
     await viewPost(usePostsStore().selectedPost)
-    .then(() => usePostsStore().selectedPost = {...usePostsStore().selectedPost, views: +usePostsStore().selectedPost?.views + 1})
+        .then(() => usePostsStore().selectedPost = { ...usePostsStore().selectedPost, views: +usePostsStore().selectedPost?.views + 1 })
 })
 
 const isLoggedInErrView = ref(false);
@@ -176,7 +197,23 @@ const likeSelectedPost = async (post: any) => {
     if (useUsersStore().isLoggedIn) {
         isLoggedInErrView.value = false;
         await likePost(post)
-            .then(async () => await getPost(post?.id));
+            .then(() => {
+
+                if (selectedPost.value?.id === post?.id) {
+                    if (selectedPost.value?.likes.includes(loggedInUser.value?.id)) {
+                        selectedPost.value.likes = selectedPost.value?.likes.filter((like: any) => like !== loggedInUser.value?.id ? like : null);
+                    } else {
+                        selectedPost.value.likes = [...selectedPost.value?.likes, loggedInUser.value?.id];
+                    }
+                }
+            })
+            .then(() => {
+                posts.value.filter((p: any) => {
+                    if (p?.id === post?.id) {
+                        p.likes = selectedPost.value?.likes;
+                    }
+                })
+            })
     } else {
         isLoggedInErrView.value = true;
     }
@@ -197,6 +234,13 @@ const deleteSelectedPost = async () => {
         usePostsStore().selectedPostPending = true;
         await deletePost(usePostsStore().selectedPost?.id)
             .then(() => {
+
+                posts.value = posts.value.filter((p: any) => {
+                    if (p?.id !== selectedPost.value?.id) {
+                        return p;
+                    }
+                })
+
                 usePostsStore().selectedPost = {};
                 usePostsStore().selectedPostView = false;
                 usePostsStore().selectedPostPending = false;
@@ -205,7 +249,6 @@ const deleteSelectedPost = async () => {
 
                 location.hash = "";
             })
-            .then(async () => await getOwnPosts())
             .then(() => usePostsStore().allPostsPending = false)
             .then(async () => await getLoggedInUserFeatures())
 

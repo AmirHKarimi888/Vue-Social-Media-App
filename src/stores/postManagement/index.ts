@@ -27,11 +27,35 @@ export const usePostsStore = defineStore("posts", () => {
     }
 
     const getFeedPosts = async (startingPostLoadLimit: number, endingPostLoadLimit: number) => {
+        
         let response = await pb.collection('posts').getList(startingPostLoadLimit, endingPostLoadLimit, {
             filter: "status = " + "" + true + "" + "",
             sort: "-created"
-        }) as any
-        posts.value = Array.from(new Set(previouslyLoadedPosts.value.concat(response?.items)));
+        })
+
+        response?.items.map(async (item: any) => {
+            
+            await pb.collection('users').getOne(item?.author)
+            .then((data: any) => {
+                response?.items.map(async (innerItem: any) => {
+        
+                    if (data?.id === innerItem?.author) {
+                        innerItem = {...innerItem, authorDetails: data};
+                        previouslyLoadedPosts.value.push(innerItem);
+                        posts.value = previouslyLoadedPosts.value;
+                        // posts.value = posts.value.sort((a: any, b: any) => {
+                        //     return b?.views - a?.views
+                        // })
+                        posts.value = posts.value.sort((a: any, b: any) => {
+                            return b?.likes?.length - a?.likes?.length
+                        })
+                    }
+                })
+            })
+        })
+
+        
+        // posts.value = previouslyLoadedPosts.value.concat(response?.items);
         previouslyLoadedPosts.value = posts.value;
     }
 
