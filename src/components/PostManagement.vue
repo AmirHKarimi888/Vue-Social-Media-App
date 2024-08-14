@@ -42,7 +42,6 @@ onBeforeMount(async () => {
     usePostsStore().allPostsPending = true;
     await getOwnPosts()
         .then(() => usePostsStore().allPostsPending = false)
-        .then(() => console.log(usePostsStore().posts))
 })
 </script>
 

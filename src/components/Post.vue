@@ -4,7 +4,7 @@
         <div class="px-10 flex justify-between items-center mb-1">
             <div class="flex items-center gap-3">
                 <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
-                    :src="selectedPost?.authorDetails ? selectedPost?.authorDetails?.avatar ? selectedPost?.authorDetails?.avatar : selectedPost?.authorDetails?.alternativeAvatar : selectedUser?.avatar ? selectedUser?.avatar : selectedUser?.alternativeAvatar"
+                    :src="selectedPost?.authorDetails ? selectedPost?.authorDetails?.avatar ?  `${VITE_PB_URL_USERS}/${selectedPost?.authorDetails?.id}/${selectedPost?.authorDetails?.avatar}` : selectedPost?.authorDetails?.alternativeAvatar : selectedUser?.avatar ?  `${VITE_PB_URL_USERS}/${selectedUser?.id}/${selectedUser?.avatar}` : selectedUser?.alternativeAvatar"
                     alt="avatar" />
                 <span class="flex flex-col font-bold">
                     {{ selectedPost?.authorDetails ? selectedPost?.authorDetails?.username : selectedUser?.username }}
@@ -125,7 +125,7 @@
 
 <script setup lang="ts">
 import Carousel from 'primevue/carousel';
-import { VITE_PB_URL_POSTS } from '../pocketbase';
+import { VITE_PB_URL_POSTS, VITE_PB_URL_USERS } from '../pocketbase';
 import { usePostsStore } from '../stores/postManagement';
 import { computed, onBeforeMount, onMounted, ref } from 'vue';
 import { useUsersStore } from '../stores/userManagement';
@@ -133,17 +133,19 @@ import ConfirmPopup from 'primevue/confirmpopup';
 import { useConfirm } from 'primevue/useconfirm';
 import Button from 'primevue/button';
 import { storeToRefs } from 'pinia';
+import { useMainStore } from '../stores/main';
+import { Bookmarks } from '.';
 
 const emit = defineEmits(['close']);
 
 const userStore = useUsersStore();
 const postStore = usePostsStore();
 
-const { selectedPost, posts } = storeToRefs(postStore);
-const { likePost, viewPost, bookmarkPost, deletePost } = usePostsStore();
+const { selectedPost, posts, allPostsPending } = storeToRefs(postStore);
+const { likePost, viewPost, bookmarkPost, deletePost, getBookmarks } = usePostsStore();
 
 const { selectedUser, loggedInUser } = storeToRefs(userStore);
-const { getLoggedInUserFeatures, getUser } = useUsersStore();
+const { getUser, getLoggedInUserFeatures } = useUsersStore();
 
 const confirm = useConfirm();
 
@@ -223,7 +225,14 @@ const bookmarkSelectedPost = async (post: any) => {
     if (useUsersStore().isLoggedIn) {
         isLoggedInErrView.value = false;
         await bookmarkPost(post)
-            .then(async () => await getLoggedInUserFeatures());
+            .then(async () => await getLoggedInUserFeatures())
+            .then(async () => {
+                if (useMainStore().dashboardMainDisplay === Bookmarks) {
+                    allPostsPending.value = true;
+                    await getBookmarks()
+                    .then(() => allPostsPending.value = false)
+                }
+            })
     } else {
         isLoggedInErrView.value = true;
     }
@@ -250,7 +259,6 @@ const deleteSelectedPost = async () => {
                 location.hash = "";
             })
             .then(() => usePostsStore().allPostsPending = false)
-            .then(async () => await getLoggedInUserFeatures())
 
     } catch (err: any) {
         usePostsStore().allPostsPending = false;

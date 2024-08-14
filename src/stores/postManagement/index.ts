@@ -135,9 +135,24 @@ export const usePostsStore = defineStore("posts", () => {
             await pb.collection("users_features").update(useUsersStore().loggedInUserFeatures?.id, {
                 bookmarks: bookmarks
             })
+
+
         } catch (err: any) {
             alert(err?.message);
         }
+    }
+
+    const getBookmarks = async () => {
+        posts.value = [];
+        await useUsersStore().getLoggedInUserFeatures()
+        .then(() => {
+            useUsersStore().loggedInUserFeatures?.bookmarks.map(async (bookmark: any) => {
+                await pb.collection('posts').getOne(bookmark)
+                .then((data) => {
+                    posts.value.push(data);
+                })
+            })
+        })
     }
 
     const deletePost = async (id: string) => {
@@ -154,5 +169,5 @@ export const usePostsStore = defineStore("posts", () => {
         });
     }
 
-    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getFeedPosts, getPost, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
+    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getFeedPosts, getPost, getBookmarks, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
 })

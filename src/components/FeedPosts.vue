@@ -4,7 +4,7 @@
         
         <div class="flex items-center gap-3">
             <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
-                :src="post.authorDetails?.avatar ? post.authorDetails?.avatar : post.authorDetails?.alternativeAvatar"
+                :src="post.authorDetails?.avatar ?  `${VITE_PB_URL_USERS}/${post.authorDetails?.id}/${post.authorDetails?.avatar}` : post.authorDetails?.alternativeAvatar"
                 alt="avatar" />
             <span class="flex flex-col font-bold">
                 {{ post.authorDetails?.username }}
@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { VITE_PB_URL_POSTS } from '../pocketbase';
+import { VITE_PB_URL_POSTS, VITE_PB_URL_USERS } from '../pocketbase';
 import { usePostsStore } from '../stores/postManagement';
 import { ref } from 'vue';
 import { useUsersStore } from '../stores/userManagement';
