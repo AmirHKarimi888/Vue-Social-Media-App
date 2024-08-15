@@ -15,5 +15,6 @@ import Blank from "./Blank.vue";
 import FeedPosts from "./FeedPosts.vue";
 import LikeBtn from "./LikeBtn.vue";
 import BookmarkBtn from "./BookmarkBtn.vue";
+import Explore from "./Explore.vue";
 
-export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts, Post, Blank, FeedPosts, LikeBtn, BookmarkBtn };
+export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts, Post, Blank, FeedPosts, LikeBtn, BookmarkBtn, Explore };

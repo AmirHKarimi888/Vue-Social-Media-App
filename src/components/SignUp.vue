@@ -1,8 +1,15 @@
 <template>
   <div class="w-full h-screen flex justify-center items-center">
     <div class="py-3 sm:max-w-xl sm:mx-auto w-full">
-      <div class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
+      <div
+        class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
         <div class="max-w-md mx-auto text-gray-500 dark:text-white">
+          <div @click="useMainStore().mainDisplay = LogIn"
+            class="cursor-pointer p-2 rounded-full border border-zinc-400 dark-border w-10 h-10 flex justify-center items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8l8 8l1.41-1.41L7.83 13H20z" />
+            </svg>
+          </div>
           <form @submit.prevent="onSubmit">
             <div class="mt-5">
               <div id="Username" class="mb-5">
@@ -58,15 +65,15 @@
             </div>
 
             <div class="mb-5">
-              <label for="fileInput" class="font-semibold text-sm text-gray-500 pb-1 block">Upload Your Profile Picture</label>
+              <label for="fileInput" class="font-semibold text-sm text-gray-500 pb-1 block">Upload Your Profile
+                Picture</label>
               <input id="fileInput" type="file" accept="image/*, video/*"
-              class="flex h-10 w-full rounded-md border border-zinc-400 bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium dark:bg-zinc-700 dark-border cursor-pointer"
-              />
+                class="flex h-10 w-full rounded-md border border-zinc-400 bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium dark:bg-zinc-700 dark-border cursor-pointer" />
             </div>
 
             <div>
               <button type="submit"
-              class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
+                class="py-2 px-4 bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg">
                 Sign Up
               </button>
             </div>

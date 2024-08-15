@@ -28,6 +28,11 @@
                     </span> -->
             </div>
 
+            <span v-if="isLoggedInErrView" class="text-red-600">
+                First log in to the app!
+                <span @click="useMainStore().mainDisplay = LogIn" class="text-green-600 cursor-pointer">Login</span>
+            </span>
+
             <div>
                 <BookmarkBtn @click="bookmarkSelectedPost(post)" :post="post" />
             </div>
@@ -51,7 +56,8 @@ import { VITE_PB_URL_POSTS, VITE_PB_URL_USERS } from '../pocketbase';
 import { usePostsStore } from '../stores/postManagement';
 import { ref } from 'vue';
 import { useUsersStore } from '../stores/userManagement';
-import { BookmarkBtn, LikeBtn } from '.';
+import { BookmarkBtn, LikeBtn, LogIn } from '.';
+import { useMainStore } from '../stores/main';
 
 const postsStore = usePostsStore();
 const usersStore = useUsersStore();
@@ -75,7 +81,7 @@ const created = (post: any) => {
 const isLoggedInErrView = ref(false);
 
 const likeSelectedPost = async (post: any) => {
-    if (useUsersStore().isLoggedIn) {
+    if (isLoggedIn.value) {
         isLoggedInErrView.value = false;
         await likePost(post)
             .then(() => {
@@ -95,7 +101,7 @@ const likeSelectedPost = async (post: any) => {
 }
 
 const bookmarkSelectedPost = async (post: any) => {
-    if (isLoggedIn) {
+    if (isLoggedIn.value) {
         isLoggedInErrView.value = false;
         await bookmarkPost(post)
             .then(async () => await getLoggedInUserFeatures());

@@ -17,47 +17,6 @@ export const usePostsStore = defineStore("posts", () => {
     
     const createPostsView = ref(false);
 
-    const getOwnPosts = async () => {
-        const id = useUsersStore().loggedInUser?.id
-        posts.value = await pb.collection('posts').getFullList({
-            filter: "author = " + "'" + id + "'" + "",
-            sort: "-created"
-        })
-        //return posts.value;
-    }
-
-    const getFeedPosts = async (startingPostLoadLimit: number, endingPostLoadLimit: number) => {
-        
-        let response = await pb.collection('posts').getList(startingPostLoadLimit, endingPostLoadLimit, {
-            filter: "status = " + "" + true + "" + "",
-            sort: "-created"
-        })
-
-        response?.items.map(async (item: any) => {
-            
-            await pb.collection('users').getOne(item?.author)
-            .then((data: any) => {
-                response?.items.map(async (innerItem: any) => {
-        
-                    if (data?.id === innerItem?.author) {
-                        innerItem = {...innerItem, authorDetails: data};
-                        previouslyLoadedPosts.value.push(innerItem);
-                        posts.value = previouslyLoadedPosts.value;
-                        // posts.value = posts.value.sort((a: any, b: any) => {
-                        //     return b?.views - a?.views
-                        // })
-                        posts.value = posts.value.sort((a: any, b: any) => {
-                            return b?.likes?.length - a?.likes?.length
-                        })
-                    }
-                })
-            })
-        })
-
-        
-        // posts.value = previouslyLoadedPosts.value.concat(response?.items);
-        previouslyLoadedPosts.value = posts.value;
-    }
 
     const createPosts = async (data: any) => {
 
@@ -88,6 +47,71 @@ export const usePostsStore = defineStore("posts", () => {
         })
     }
 
+    const getOwnPosts = async () => {
+        const id = useUsersStore().loggedInUser?.id
+        posts.value = await pb.collection('posts').getFullList({
+            filter: "author = " + "'" + id + "'" + "",
+            sort: "-created"
+        })
+        //return posts.value;
+    }
+
+    const getNewPosts = async (pageNum: number, itemsPerPage: number) => {
+        const response = await pb.collection('posts').getList(pageNum, itemsPerPage, {
+            filter: "status = " + "" + true + "" + "",
+            sort: "-created"
+        }) as any
+        
+        posts.value = previouslyLoadedPosts.value.concat(response?.items);
+        previouslyLoadedPosts.value = posts.value;
+    }
+
+    const getFeedPosts = async (pageNum: number, itemsPerPage: number) => {
+        
+        const response = await pb.collection('posts').getList(pageNum, itemsPerPage, {
+            filter: "status = " + "" + true + "" + "",
+            sort: "-created"
+        })
+
+        response?.items.map(async (item: any) => {
+            
+            await pb.collection('users').getOne(item?.author)
+            .then((data: any) => {
+                response?.items.map(async (innerItem: any) => {
+        
+                    if (data?.id === innerItem?.author) {
+                        innerItem = {...innerItem, authorDetails: data};
+                        previouslyLoadedPosts.value.push(innerItem);
+                        posts.value = previouslyLoadedPosts.value;
+                        // posts.value = posts.value.sort((a: any, b: any) => {
+                        //     return b?.views - a?.views
+                        // })
+                        posts.value = posts.value.sort((a: any, b: any) => {
+                            return b?.likes?.length - a?.likes?.length
+                        })
+                    }
+                })
+            })
+        })
+
+        
+        // posts.value = previouslyLoadedPosts.value.concat(response?.items);
+        previouslyLoadedPosts.value = posts.value;
+    }
+
+    const getBookmarks = async () => {
+        posts.value = [];
+        await useUsersStore().getLoggedInUserFeatures()
+        .then(() => {
+            useUsersStore().loggedInUserFeatures?.bookmarks.map(async (bookmark: any) => {
+                await pb.collection('posts').getOne(bookmark)
+                .then((data) => {
+                    posts.value.push(data);
+                })
+            })
+        })
+    }
+
     const getPost = async (id: string) => {
         try {
             selectedPost.value = await pb.collection('posts').getOne(id);
@@ -97,6 +121,9 @@ export const usePostsStore = defineStore("posts", () => {
             selectedPostView.value = false;
         }
     }
+
+
+    
 
     const likePost = async (post: any) => {
         try {
@@ -142,19 +169,6 @@ export const usePostsStore = defineStore("posts", () => {
         }
     }
 
-    const getBookmarks = async () => {
-        posts.value = [];
-        await useUsersStore().getLoggedInUserFeatures()
-        .then(() => {
-            useUsersStore().loggedInUserFeatures?.bookmarks.map(async (bookmark: any) => {
-                await pb.collection('posts').getOne(bookmark)
-                .then((data) => {
-                    posts.value.push(data);
-                })
-            })
-        })
-    }
-
     const deletePost = async (id: string) => {
         await pb.collection('posts').delete(id);
     }
@@ -169,5 +183,5 @@ export const usePostsStore = defineStore("posts", () => {
         });
     }
 
-    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getFeedPosts, getPost, getBookmarks, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
+    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getFeedPosts, getPost, getBookmarks, getNewPosts, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
 })

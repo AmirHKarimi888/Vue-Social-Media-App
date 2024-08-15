@@ -3,9 +3,11 @@
         <div class="py-3 sm:max-w-xl sm:mx-auto w-full">
             <div class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                 <div class="max-w-md mx-auto text-gray-500 dark:text-white">
+                    <div @click="useMainStore().mainDisplay = Dashboard" class="cursor-pointer p-2 rounded-full border border-zinc-400 dark-border w-10 h-10 flex justify-center items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8l8 8l1.41-1.41L7.83 13H20z"/></svg>
+                    </div>
                     <form @submit.prevent="onSubmit">
                         <div class="mt-5">
-
                             <div id="Email" class="mb-5">
                                 <label for="signup"
                                     class="font-semibold text-sm text-gray-500 pb-1 block">E-mail</label>
@@ -67,7 +69,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useMainStore } from "../stores/main";
-import { SignUp } from "./index";
+import { Dashboard, SignUp } from "./index";
 import { CheckBox } from "../components/icons";
 import { useForm } from "vee-validate";
 import * as yup from "yup";

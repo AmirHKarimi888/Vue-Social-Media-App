@@ -4,13 +4,13 @@
 
     <div id="Dashboard" class="mx-auto w-full h-screen grid grid-cols-4 gap-2 p-2 absolute top-16 lg:top-0 box-border">
         <div class="lg:col-span-1 md:col-span-1 md:block sm:hidden max-sm:hidden box-border h-screen">
-            <div class="h-full grid gap-2 grid-rows-3">
-                <div
-                    class="profile row-span-1 border border-gray-300 rounded-md box-border grid items-center bg dark-border">
+            <div class="h-full flex-row">
+                <div v-if="useUsersStore().isLoggedIn"
+                    class="profile h-[30%] border border-gray-300 rounded-md box-border grid items-center bg dark-border">
                     <Profile />
                 </div>
 
-                <div class="options row-span-2 border border-gray-300 rounded-md dark-border box-border">
+                <div class="options mt-1 h-[70%] max-h-screen border border-gray-300 rounded-md dark-border box-border">
                     <Options />
                 </div>
             </div>
@@ -47,6 +47,7 @@ import { Drawer, NavBar, Options, Post, Profile } from '.';
 import { usePostsStore } from '../stores/postManagement';
 import { SpinnerLg } from './icons';
 import { useMainStore } from '../stores/main';
+import { useUsersStore } from '../stores/userManagement';
 
 
 const closePostModal = () => {
