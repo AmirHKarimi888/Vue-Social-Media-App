@@ -5,7 +5,7 @@
     <ul v-else class="mt-2 w-full grid grid-cols-3 gap-2">
         <Posts />
     </ul>
-    <Button v-if="posts" class="text-white bg-green-500 p-1 rounded-md w-full my-5" @click="loadMore">Show More</Button>
+    <Button v-if="!allPostsPending" class="text-white bg-green-500 p-1 rounded-md w-full my-5" @click="loadMore">Show More</Button>
 </template>
 
 <script setup lang="ts">
