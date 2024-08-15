@@ -25,10 +25,10 @@
                 </div>
             </form>
 
-            <div v-if="useUsersStore().searchView" @click.self="useUsersStore().searchView = false"
-                class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-center bg-zinc-900/50">
+            <div v-if="useUsersStore().searchView" @click.self="closeSearchBox"
+                class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-start bg-zinc-900/50">
                 <div
-                    class="p-3 bg-zinc-100 dark:bg-zinc-900 lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] max-h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
+                    class="p-3 mt-20 bg-zinc-100 dark:bg-zinc-900 lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] max-h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
                     <Search />
                     <Users />
                 </div>
@@ -41,6 +41,11 @@
 import { Search, Users } from '.';
 import { useMainStore } from '../stores/main';
 import { useUsersStore } from '../stores/userManagement';
+
+const closeSearchBox = () => {
+    useUsersStore().searchView = false;
+    useUsersStore().users = [];
+}
 </script>
 
 <style scoped></style>

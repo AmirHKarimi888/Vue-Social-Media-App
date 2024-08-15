@@ -29,12 +29,12 @@ const searchInput = ref("");
 
 const searchUser = async (input: string) => {
     useUsersStore().users = [];
-    usersStore.usersPending = true;
-    await getSearchingUsers(input)
-    .then(() => usersStore.usersPending = false)
+    if (input !== "") {
+        usersStore.usersPending = true;
+        await getSearchingUsers(input)
+            .then(() => usersStore.usersPending = false)
+    }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
