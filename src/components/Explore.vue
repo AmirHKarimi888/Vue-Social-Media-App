@@ -33,7 +33,7 @@ onBeforeMount(async () => {
 
 const loadMore = async () => {
     pageNum ++;
-    await getNewPosts(pageNum, 6);
+    await getNewPosts(pageNum, 12);
 }
 </script>
 

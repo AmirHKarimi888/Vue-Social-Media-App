@@ -27,7 +27,7 @@
                 <Search />
             </div>
             <div>
-                <Users />
+                <UsersList />
             </div>
         </div>
 
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { Drawer, NavBar, Options, Post, Profile, Search, Users } from '.';
+import { Drawer, NavBar, Options, Post, Profile, Search, UsersList } from '.';
 import { usePostsStore } from '../stores/postManagement';
 import { SpinnerLg } from './icons';
 import { useMainStore } from '../stores/main';

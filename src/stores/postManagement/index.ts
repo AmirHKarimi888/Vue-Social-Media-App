@@ -56,6 +56,14 @@ export const usePostsStore = defineStore("posts", () => {
         //return posts.value;
     }
 
+    const getUserPosts = async (id: string) => {
+        posts.value = await pb.collection('posts').getFullList({
+            filter: "author = " + "'" + id + "'" + " && " + "status = " + "" + true + "" + "",
+            sort: "-created"
+        })
+        //return posts.value;
+    }
+
     const getNewPosts = async (pageNum: number, itemsPerPage: number) => {
         const response = await pb.collection('posts').getList(pageNum, itemsPerPage, {
             filter: "status = " + "" + true + "" + "",
@@ -63,6 +71,7 @@ export const usePostsStore = defineStore("posts", () => {
         }) as any
         
         posts.value = previouslyLoadedPosts.value.concat(response?.items);
+        posts.value = Array.from(new Set(posts.value));
         previouslyLoadedPosts.value = posts.value;
     }
 
@@ -183,5 +192,5 @@ export const usePostsStore = defineStore("posts", () => {
         });
     }
 
-    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getFeedPosts, getPost, getBookmarks, getNewPosts, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
+    return { posts, allPostsPending, previouslyLoadedPosts, selectedPost, selectedPostView, selectedPostPending, createPostsView, getOwnPosts, getUserPosts, getFeedPosts, getPost, getBookmarks, getNewPosts, createPosts, likePost, viewPost, bookmarkPost, deletePost, openPostModal };
 })

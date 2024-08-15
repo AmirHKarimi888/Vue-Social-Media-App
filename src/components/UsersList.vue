@@ -3,12 +3,12 @@
         <Spinner />
     </div>
     <ul v-else class="grid mt-5">
-        <User />
+        <UserItem />
     </ul>
 </template>
 
 <script setup lang="ts">
-import { User } from '.';
+import { UserItem } from '.';
 import { useUsersStore } from '../stores/userManagement';
 import { Spinner } from './icons';
 

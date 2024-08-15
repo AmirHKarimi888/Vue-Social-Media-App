@@ -30,7 +30,7 @@
                 <div
                     class="p-3 mt-20 bg-zinc-100 dark:bg-zinc-900 lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] max-h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
                     <Search />
-                    <Users />
+                    <UsersList />
                 </div>
             </div>
         </nav>
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search, Users } from '.';
+import { Search, UsersList } from '.';
 import { useMainStore } from '../stores/main';
 import { useUsersStore } from '../stores/userManagement';
 

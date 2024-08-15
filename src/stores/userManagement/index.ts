@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { pb } from "../../pocketbase";
+import { useMainStore } from "../main";
+import { Blank, User } from "../../components";
+import { usePostsStore } from "../postManagement";
 
 export const useUsersStore = defineStore("users", () => {
     const isLoggedIn = ref(pb.authStore.isValid);
@@ -14,6 +17,7 @@ export const useUsersStore = defineStore("users", () => {
     const searchView = ref(false);
 
     const selectedUser = ref<any>({});
+    const selectedUserFeatures = ref<any>({});
 
     const getSearchingUsers = async (input: string) => {
         users.value = await pb.collection('users').getFullList({
@@ -38,6 +42,15 @@ export const useUsersStore = defineStore("users", () => {
         //return features[0];
     }
 
+    const getSelectedUserFeatures = async (username: string, email: string) => {
+
+        const features = await pb.collection('users_features').getFullList({
+            filter: "username = " + "'" + username + "'" + " && " + "email = " + "'" + email + "'" + ""
+        })
+        selectedUserFeatures.value = features[0];
+        //return features[0];
+    }
+
     const updateLoggedInUserFeaturesPosts = async (postId: string) => {
         try {
             await pb.collection("users_features").update(loggedInUserFeatures.value?.id, {
@@ -54,5 +67,18 @@ export const useUsersStore = defineStore("users", () => {
         selectedUser.value = await pb.collection('users').getOne(id);
     }
 
-    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers };
+    const openUserDisplay = async (user: any) => {
+        useMainStore().dashboardMainDisplay = Blank;
+    
+        selectedUser.value = user;
+        usePostsStore().allPostsPending = true;
+        await usePostsStore().getUserPosts(user?.id)
+            .then(async () => {
+                await getSelectedUserFeatures(user?.username, user?.email);
+            })
+            .then(() => usePostsStore().allPostsPending = false)
+            .then(() => useMainStore().dashboardMainDisplay = User)
+    }
+
+    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, selectedUserFeatures, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers, getSelectedUserFeatures, openUserDisplay };
 })
