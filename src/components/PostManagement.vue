@@ -1,6 +1,6 @@
 <template>
     <div class="h-screen overflow-auto">
-        <div class="bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-white border border-zinc-300 dark-border rounded-md">
+        <div class="bg-zinc-100 dark:bg-zinc-800 text-gray-500 dark:text-white border dark:border-zinc-800 border-zinc-300 rounded-md">
 
             <div class="p-5 text-zinc-700 dark:text-white">
                 <div id="PostTitle">
@@ -22,7 +22,7 @@
         </div>
 
         <div v-if="usePostsStore().allPostsPending" class="w-full mt-40 grid justify-center items-center">
-            <SpinnerLg />
+            <Spinner />
         </div>
         <ul v-else class="mt-2 w-full grid grid-cols-3 gap-2">
             <Posts />
@@ -34,7 +34,7 @@
 import { onBeforeMount } from 'vue';
 import { CreatePosts, Posts } from '.';
 import { usePostsStore } from '../stores/postManagement';
-import { SpinnerLg } from './icons';
+import { Spinner } from './icons';
 
 const { getOwnPosts } = usePostsStore();
 

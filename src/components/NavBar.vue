@@ -1,9 +1,14 @@
 <template>
     <div id="Navbar" class="lg:hidden">
-        <nav class="w-full h-[63px] bg-zinc-100 dark:bg-black border-b border-zinc-300 dark-border fixed z-50 flex items-center">
-            <Menu class="ml-5 text-3xl cursor-pointer hidden max-[767px]:block" @click="useMainStore().toggleDrawer" />
+        <nav
+            class="w-full h-[63px] bg-zinc-100 dark:bg-black border-b border-zinc-300 dark:border-zinc-800 fixed z-50 flex items-center">
+            <span class="ml-5 text-3xl cursor-pointer hidden max-[767px]:block" @click="useMainStore().toggleDrawer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
+                </svg>
+            </span>
 
-            <form class="max-w-lg mx-auto">
+            <form @submit.prevent @click="useUsersStore().searchView = true" class="max-w-lg mx-auto">
                 <label for="default-search"
                     class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                 <div class="relative">
@@ -20,13 +25,22 @@
                 </div>
             </form>
 
+            <div v-if="useUsersStore().searchView" @click.self="useUsersStore().searchView = false"
+                class="z-50 fixed top-0 left-0 w-full h-screen flex justify-center items-center bg-zinc-900/50">
+                <div
+                    class="p-3 bg-zinc-100 dark:bg-zinc-900 lg:w-[60%] md:w-[70%] sm:w-[90%] max-sm:w-[95%] max-h-[80%] box-border overflow-auto rounded-md border border-zinc-300 dark:border-zinc-900">
+                    <Search />
+                    <Users />
+                </div>
+            </div>
         </nav>
     </div>
 </template>
 
 <script setup lang="ts">
+import { Search, Users } from '.';
 import { useMainStore } from '../stores/main';
-import { Menu } from './icons';
+import { useUsersStore } from '../stores/userManagement';
 </script>
 
 <style scoped></style>

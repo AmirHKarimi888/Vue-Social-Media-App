@@ -6,11 +6,11 @@
         <div class="lg:col-span-1 md:col-span-1 md:block sm:hidden max-sm:hidden box-border h-screen">
             <div class="h-full flex-row">
                 <div v-if="useUsersStore().isLoggedIn"
-                    class="profile h-[30%] border border-gray-300 rounded-md box-border grid items-center bg dark-border">
+                    class="profile h-[30%] border border-gray-300 dark:border-zinc-800 rounded-md box-border grid items-center bg">
                     <Profile />
                 </div>
 
-                <div class="options mt-1 h-[70%] max-h-screen border border-gray-300 rounded-md dark-border box-border">
+                <div class="options mt-1 h-[70%] max-h-screen border border-gray-300 dark:border-zinc-800 rounded-md box-border">
                     <Options />
                 </div>
             </div>
@@ -22,9 +22,12 @@
             </div>
         </div>
 
-        <div class="lg:col-span-1 lg:block md:hidden sm:hidden max-sm:hidden border border-gray-300 rounded-md h-screen">
+        <div class="bg-zinc-100 p-3 dark:bg-zinc-800 lg:col-span-1 lg:block md:hidden sm:hidden max-sm:hidden border border-gray-300 dark:border-zinc-800 rounded-md h-screen">
             <div class="search">
-
+                <Search />
+            </div>
+            <div>
+                <Users />
             </div>
         </div>
 
@@ -43,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { Drawer, NavBar, Options, Post, Profile } from '.';
+import { Drawer, NavBar, Options, Post, Profile, Search, Users } from '.';
 import { usePostsStore } from '../stores/postManagement';
 import { SpinnerLg } from './icons';
 import { useMainStore } from '../stores/main';

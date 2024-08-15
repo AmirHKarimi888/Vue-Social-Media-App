@@ -7,7 +7,19 @@ export const useUsersStore = defineStore("users", () => {
     const loggedInUser = ref(pb.authStore.model);
     const loggedInUserFeatures = ref<any>();
 
+    const users = ref<any[]>([]);
+
+    const usersPending = ref(false);
+
+    const searchView = ref(false);
+
     const selectedUser = ref<any>({});
+
+    const getSearchingUsers = async (input: string) => {
+        users.value = await pb.collection('users').getFullList({
+            filter: "username ~ " + "'" + input + "'" + " || " + "email ~ " + "'" + input + "'" + "",
+        })
+    }
 
     const updateLoggedInUser = () => {
         isLoggedIn.value = pb.authStore.isValid;
@@ -42,5 +54,5 @@ export const useUsersStore = defineStore("users", () => {
         selectedUser.value = await pb.collection('users').getOne(id);
     }
 
-    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser };
+    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers };
 })
