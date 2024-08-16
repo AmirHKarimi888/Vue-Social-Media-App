@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <div class="bg-zinc-100 border border-zinc-300">
+        <div class="bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-900">
             <div class="mx-auto flex items-center gap-7 pl-5 py-5">
                 <img class="w-[30%] aspect-square rounded-full bg-slate-500 shadow-lg"
                     :src="selectedUser?.avatar ?  `${VITE_PB_URL_USERS}/${selectedUser?.id}/${selectedUser?.avatar}` : selectedUser?.alternativeAvatar"

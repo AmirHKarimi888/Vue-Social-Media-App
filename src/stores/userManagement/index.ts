@@ -69,7 +69,7 @@ export const useUsersStore = defineStore("users", () => {
 
     const openUserDisplay = async (user: any) => {
         useMainStore().dashboardMainDisplay = Blank;
-    
+        usePostsStore().selectedPostView = false;
         selectedUser.value = user;
         usePostsStore().allPostsPending = true;
         await usePostsStore().getUserPosts(user?.id)
