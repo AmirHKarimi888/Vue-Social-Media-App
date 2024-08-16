@@ -1,5 +1,5 @@
 <template>
-    <div v-if="usePostsStore().allPostsPending" class="w-full mt-40 grid justify-center items-center">
+    <div v-if="allPostsPending" class="w-full mt-40 grid justify-center items-center">
         <Spinner />
     </div>
     <ul v-else class="mt-2 w-full grid grid-cols-3 gap-2">

@@ -25,11 +25,11 @@ const { getFeedPosts } = postStore;
 
 let pageNum = 1;
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
     allPostsPending.value = true;
     previouslyLoadedPosts.value = [];
     posts.value = [];
-    await getFeedPosts(pageNum, 5)
+    getFeedPosts(pageNum, 5)
     .then(() => allPostsPending.value = false)
 })
 

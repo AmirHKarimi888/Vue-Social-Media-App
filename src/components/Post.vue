@@ -4,7 +4,7 @@
         <div class="px-10 flex justify-between items-center mb-1">
 
             <a :href="`#${selectedPost?.author}`"
-                @click="useUsersStore().openUserDisplay(selectedUser)">
+                @click="openUserDisplay(selectedUser)">
                 <div class="flex items-center gap-3">
 
                     <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
@@ -28,7 +28,7 @@
 
             <div class="flex gap-3">
                 <div class="flex gap-1">
-                    <!-- <Button v-if="useUsersStore().selectedUser?.id === useUsersStore().loggedInUser?.id"
+                    <!-- <Button v-if="selectedUser?.id === loggedInUser?.id"
                         class="text-xs text-white p-2 bg-green-600 rounded-lg cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h8.925l-2 2H5v14h14v-6.95l2-2V19q0 .825-.587 1.413T19 21zm4-6v-4.25l9.175-9.175q.3-.3.675-.45t.75-.15q.4 0 .763.15t.662.45L22.425 3q.275.3.425.663T23 4.4t-.137.738t-.438.662L13.25 15zM21.025 4.4l-1.4-1.4zM11 13h1.4l5.8-5.8l-.7-.7l-.725-.7L11 11.575zm6.5-6.5l-.725-.7zl.7.7z"/></svg>
                     </Button> -->
@@ -48,7 +48,7 @@
                             </div>
                         </template>
                     </ConfirmPopup>
-                    <Button v-if="useUsersStore().selectedUser?.id === useUsersStore().loggedInUser?.id"
+                    <Button v-if="selectedUser?.id === loggedInUser?.id"
                         @click="requireConfirmation($event)"
                         class="text-xs text-white p-2 bg-red-600 rounded-lg cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
@@ -68,15 +68,15 @@
 
 
         <div class="h-full flex max-sm:flex-col justify-center items-start gap-y-5 box-border">
-            <div class="sm:w-[60%] flex items-start">
-                <Carousel id="PostCarousel" :value="usePostsStore().selectedPost?.media" :numVisible="1" :numScroll="1"
+            <div class="sm:w-[60%] flex justify-center items-start">
+                <Carousel id="PostCarousel" :value="selectedPost?.media" :numVisible="1" :numScroll="1"
                     :showIndicators="false">
                     <template #item="slotProps">
                         <img v-if="slotProps.data.toLowerCase().includes('.jpg') || slotProps.data.toLowerCase().includes('.jpeg') || slotProps.data.toLowerCase().includes('.png') || slotProps.data.toLowerCase().includes('.gif') || slotProps.data.toLowerCase().includes('.webp')"
-                            :src="`${VITE_PB_URL_POSTS}/${usePostsStore().selectedPost?.id}/${slotProps.data}`"
+                            :src="`${VITE_PB_URL_POSTS}/${selectedPost?.id}/${slotProps.data}`"
                             class="mx-auto w-full aspect-[1]" alt="image">
                         <video v-else class="w-full aspect-square" controls>
-                            <source :src="`${VITE_PB_URL_POSTS}/${usePostsStore().selectedPost?.id}/${slotProps.data}`"
+                            <source :src="`${VITE_PB_URL_POSTS}/${selectedPost?.id}/${slotProps.data}`"
                                 type="video/mp4">
                         </video>
                     </template>
@@ -84,19 +84,19 @@
             </div>
 
             <div class="sm:h-[300px] max-sm:h-[150px] sm:w-[40%] flex flex-col flex-initial box-border text-sm">
-                <div class="box-border overflow-auto pt-2 max-sm:px-6">
-                    {{ usePostsStore().selectedPost?.description }}
+                <div class="box-border overflow-auto pt-2 max-sm:px-9">
+                    {{ selectedPost?.description }}
                 </div>
             </div>
         </div>
 
 
-        <div class="flex justify-between px-6 mt-2 text-zinc-800 dark:text-white">
+        <div class="flex justify-between px-9 mt-2 text-zinc-800 dark:text-white">
             <div class="flex gap-4">
-                <span @click="likeSelectedPost(usePostsStore().selectedPost)"
+                <span @click="likeSelectedPost(selectedPost)"
                     class="cursor-pointer flex items-center gap-1">
-                    {{ usePostsStore().selectedPost?.likes.length }}
-                    <svg v-if="usePostsStore().selectedPost?.likes.includes(useUsersStore().loggedInUser?.id)"
+                    {{ selectedPost?.likes.length }}
+                    <svg v-if="selectedPost?.likes.includes(loggedInUser?.id)"
                         class="text-red-600" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                         viewBox="0 0 24 24">
                         <path fill="currentColor"
@@ -108,7 +108,7 @@
                     </svg>
                 </span>
                 <!-- <span class="cursor-pointer flex items-center gap-1">
-                    {{ usePostsStore().selectedPost?.comments.length }}
+                    {{ selectedPost?.comments.length }}
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M21.99 4c0-1.1-.89-2-1.99-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4zM18 14H6v-2h12zm0-3H6V9h12zm0-3H6V6h12z"/></svg>
                 </span> -->
             </div>
@@ -119,8 +119,8 @@
             </span>
 
             <div>
-                <span @click="bookmarkSelectedPost(usePostsStore().selectedPost)" class="cursor-pointer">
-                    <svg v-if="useUsersStore().loggedInUserFeatures?.bookmarks.includes(usePostsStore().selectedPost?.id)"
+                <span @click="bookmarkSelectedPost(selectedPost)" class="cursor-pointer">
+                    <svg v-if="loggedInUserFeatures?.bookmarks.includes(selectedPost?.id)"
                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                         <path fill="currentColor" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3l7 3V5c0-1.1-.9-2-2-2" />
                     </svg>
@@ -149,14 +149,17 @@ import { Bookmarks, LogIn } from '.';
 
 const emit = defineEmits(['close']);
 
+const mainStore = useMainStore();
 const userStore = useUsersStore();
 const postStore = usePostsStore();
 
-const { selectedPost, posts, allPostsPending } = storeToRefs(postStore);
+const { dashboardMainDisplay } = storeToRefs(mainStore);
+
+const { selectedPost, posts, allPostsPending, selectedPostPending, selectedPostView } = storeToRefs(postStore);
 const { likePost, viewPost, bookmarkPost, deletePost, getBookmarks } = usePostsStore();
 
-const { selectedUser, loggedInUser } = storeToRefs(userStore);
-const { getUser, getLoggedInUserFeatures } = useUsersStore();
+const { selectedUser, loggedInUser, isLoggedIn, loggedInUserFeatures } = storeToRefs(userStore);
+const { getUser, getLoggedInUserFeatures, openUserDisplay } = useUsersStore();
 
 const confirm = useConfirm();
 
@@ -182,34 +185,16 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-    const carouselButtons = document.querySelectorAll("#PostCarousel button");
-    //const carouselMainView = document.querySelector("#PostCarousel .p-carousel-viewport");
-    const touchPad = document.querySelector("#PostCarousel .p-carousel-viewport");
-
-    const setNavigatorBtnsClass = () => {
-        carouselButtons[0].classList.add("relative", "left-10", "z-10", "col-span-1", "bg-zinc-300/30", "w-7", "h-7", "text-xs");
-        carouselButtons[1].classList.add("relative", "right-10", "z-10", "col-span-1", "bg-zinc-300/30", "w-7", "h-7", "text-xs");
-    }
-
-    setNavigatorBtnsClass();
-
-    carouselButtons[0].addEventListener("click", setNavigatorBtnsClass);
-    carouselButtons[1].addEventListener("click", setNavigatorBtnsClass);
-
-    touchPad?.addEventListener("touchstart", setNavigatorBtnsClass);
-    touchPad?.addEventListener("touchmove", setNavigatorBtnsClass);
-    touchPad?.addEventListener("touchend", setNavigatorBtnsClass);
-
     await getUser(selectedPost.value?.author);
 
-    await viewPost(usePostsStore().selectedPost)
-        .then(() => usePostsStore().selectedPost = { ...usePostsStore().selectedPost, views: +usePostsStore().selectedPost?.views + 1 })
+    await viewPost(selectedPost.value)
+        .then(() => selectedPost.value = { ...selectedPost.value, views: +selectedPost.value?.views + 1 })
 })
 
 const isLoggedInErrView = ref(false);
 
 const likeSelectedPost = async (post: any) => {
-    if (useUsersStore().isLoggedIn) {
+    if (isLoggedIn.value) {
         isLoggedInErrView.value = false;
         await likePost(post)
             .then(() => {
@@ -235,12 +220,12 @@ const likeSelectedPost = async (post: any) => {
 }
 
 const bookmarkSelectedPost = async (post: any) => {
-    if (useUsersStore().isLoggedIn) {
+    if (isLoggedIn.value) {
         isLoggedInErrView.value = false;
         await bookmarkPost(post)
             .then(async () => await getLoggedInUserFeatures())
             .then(async () => {
-                if (useMainStore().dashboardMainDisplay === Bookmarks) {
+                if (dashboardMainDisplay.value === Bookmarks) {
                     allPostsPending.value = true;
                     await getBookmarks()
                         .then(() => allPostsPending.value = false)
@@ -253,8 +238,8 @@ const bookmarkSelectedPost = async (post: any) => {
 
 const deleteSelectedPost = async () => {
     try {
-        usePostsStore().selectedPostPending = true;
-        await deletePost(usePostsStore().selectedPost?.id)
+        selectedPostPending.value = true;
+        await deletePost(selectedPost.value?.id)
             .then(() => {
 
                 posts.value = posts.value.filter((p: any) => {
@@ -263,19 +248,19 @@ const deleteSelectedPost = async () => {
                     }
                 })
 
-                usePostsStore().selectedPost = {};
-                usePostsStore().selectedPostView = false;
-                usePostsStore().selectedPostPending = false;
+                selectedPost.value = {};
+                selectedPostView.value = false;
+                selectedPostPending.value = false;
 
-                usePostsStore().allPostsPending = true;
+                allPostsPending.value = true;
 
                 location.hash = "";
             })
-            .then(() => usePostsStore().allPostsPending = false)
+            .then(() => allPostsPending.value = false)
 
     } catch (err: any) {
-        usePostsStore().allPostsPending = false;
-        usePostsStore().selectedPostPending = false;
+        allPostsPending.value = false;
+        selectedPostPending.value = false;
     }
 }
 

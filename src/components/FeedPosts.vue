@@ -1,7 +1,7 @@
 <template>
     <li v-for="post in posts" :key="post?.id"
         class="aspect-auto shadow-lg shadow-zinc-200 border dark:shadow-none dark:border-zinc-800 p-6">
-        <a :href="`#${post?.authorDetails.id}`" @click="useUsersStore().openUserDisplay(post?.authorDetails)">
+        <a :href="`#${post?.authorDetails.id}`" @click="openUserDisplay(post?.authorDetails)">
             <div class="flex items-center gap-3">
 
                 <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
@@ -36,7 +36,7 @@
 
             <span v-if="isLoggedInErrView" class="text-red-600">
                 First log in to the app!
-                <span @click="useMainStore().mainDisplay = LogIn" class="text-green-600 cursor-pointer">Login</span>
+                <span @click="mainDisplay = LogIn" class="text-green-600 cursor-pointer">Login</span>
             </span>
 
             <div>
@@ -65,11 +65,14 @@ import { useUsersStore } from '../stores/userManagement';
 import { BookmarkBtn, LikeBtn, LogIn } from '.';
 import { useMainStore } from '../stores/main';
 
+const mainStore = useMainStore();
 const postsStore = usePostsStore();
 const usersStore = useUsersStore();
 
+const { mainDisplay } = storeToRefs(mainStore);
+
 const { isLoggedIn, loggedInUser } = storeToRefs(usersStore);
-const { getLoggedInUserFeatures } = usersStore;
+const { getLoggedInUserFeatures, openUserDisplay } = usersStore;
 
 const { posts } = storeToRefs(postsStore);
 const { likePost, bookmarkPost, openPostModal } = postsStore;

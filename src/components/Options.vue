@@ -1,7 +1,7 @@
 <template>
     <div class="h-full overflow-y-auto bg-zinc-100 dark:bg-zinc-800 rounded-md">
         <ul class="space-y-2 font-medium mt-5">
-            <li class="cursor-pointer px-2" @click="useMainStore().dashboardMainDisplay = Feed">
+            <li class="cursor-pointer px-2" @click="dashboardMainDisplay = Feed">
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 group">
                     <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"/>
@@ -9,7 +9,7 @@
                    <span class="flex-1 ms-3 whitespace-nowrap">Feed</span>
                 </a>
             </li>
-            <li class="cursor-pointer px-2" @click="useMainStore().dashboardMainDisplay = Explore">
+            <li class="cursor-pointer px-2" @click="dashboardMainDisplay = Explore">
                 <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 group">
                   <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                     <path fill="currentColor" d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1s1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m2.19 12.19L6 18l3.81-8.19L18 6z"/>
@@ -17,7 +17,7 @@
                  <span class="flex-1 ms-3 whitespace-nowrap">Explore</span>
                 </a>
              </li>
-           <li v-if="isLoggedIn" class="cursor-pointer px-2" @click="useMainStore().dashboardMainDisplay = PostManagement">
+           <li v-if="isLoggedIn" class="cursor-pointer px-2" @click="dashboardMainDisplay = PostManagement">
               <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 group">
                  <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                     <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
@@ -26,7 +26,7 @@
                  <span class="ms-3">Management</span>
               </a>
            </li>
-           <li v-if="isLoggedIn" class="cursor-pointer px-2" @click="useMainStore().dashboardMainDisplay = Bookmarks">
+           <li v-if="isLoggedIn" class="cursor-pointer px-2" @click="dashboardMainDisplay = Bookmarks">
               <a class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-zinc-200 dark:hover:bg-zinc-700 group">
                 <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                     <path fill="currentColor" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3l7 3V5c0-1.1-.9-2-2-2"/>
@@ -70,7 +70,7 @@
              <span class="flex-1 ms-3 whitespace-nowrap">Log Out</span>
             </a>
          </Button>
-         <li v-if="!isLoggedIn" class="cursor-pointer px-2" @click="useMainStore().mainDisplay = LogIn">
+         <li v-if="!isLoggedIn" class="cursor-pointer px-2" @click="mainDisplay = LogIn">
             <a class="flex items-center p-2 text-green-600 hover:text-green-500 rounded-lg hover:bg-zinc-300 dark:hover:bg-zinc-700 group">
               <svg class="w-5 h-5 text-green-600 transition duration-75 dark:group-hover:text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                 <path fill="currentColor" d="m17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4z"/>
@@ -102,7 +102,10 @@ import { useMainStore } from '../stores/main';
 import { useUsersStore } from '../stores/userManagement';
 import { storeToRefs } from 'pinia';
 
+const mainStore = useMainStore();
 const usersStore = useUsersStore();
+
+const { dashboardMainDisplay, mainDisplay } = storeToRefs(mainStore);
 
 const { isLoggedIn } = storeToRefs(usersStore);
 

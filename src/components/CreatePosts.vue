@@ -7,12 +7,13 @@
                         d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z" />
                 </svg>
             </div>
-            <div id="PostTitle" class="mb-5">
+            
+            <!-- <div id="PostTitle" class="mb-5">
                 <label class="font-semibold text-sm text-gray-400 pb-1 block">Title</label>
                 <input v-model="title" v-bind="titleAttrs" id="title" type="text"
                     class="rounded-lg px-3 py-2 mt-1 text-sm w-full bg-zinc-50 dark:bg-zinc-700 border border-zinc-400 dark-border"
                     required />
-            </div>
+            </div> -->
 
             <div id="PostDescription" class="mb-5">
                 <label class="font-semibold text-sm text-gray-400 pb-1 block">Description</label>
@@ -83,15 +84,19 @@ import { usePostsStore } from "../stores/postManagement";
 import Carousel from "primevue/carousel";
 import { SpinnerLg } from "./icons";
 import Dialog from "primevue/dialog";
+import { storeToRefs } from "pinia";
 
 const createPostPending = ref(false);
 
-const { createPosts } = usePostsStore();
+const postsStore = usePostsStore();
+
+const { createPostsView } = storeToRefs(postsStore);
+const { createPosts } = postsStore;
 
 const schema = yup.object({
-    title: yup.string()
-        .min(1, "title must be at least one characters")
-        .required("title is required"),
+    // title: yup.string()
+    //     .min(1, "title must be at least one characters")
+    //     .required("title is required"),
 })
 
 const { handleSubmit, defineField, resetForm } = useForm({
@@ -99,7 +104,7 @@ const { handleSubmit, defineField, resetForm } = useForm({
 });
 
 
-const [title, titleAttrs] = defineField("title");
+// const [title, titleAttrs] = defineField("title");
 const [description, descriptionAttrs] = defineField("description");
 let files: any = [];
 const filesDisplay = ref<any[]>([]);
@@ -136,7 +141,7 @@ const onSubmit = handleSubmit(async (data) => {
             status.value = false;
             files = [];
             filesDisplay.value = [];
-            usePostsStore().createPostsView = false;
+            createPostsView.value = false;
         })
         
     } catch (err: any) {

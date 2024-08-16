@@ -6,18 +6,21 @@ import { Blank, User } from "../../components";
 import { usePostsStore } from "../postManagement";
 
 export const useUsersStore = defineStore("users", () => {
+
+    const mainStore = useMainStore();
+    const postsStore = usePostsStore();
+
     const isLoggedIn = ref(pb.authStore.isValid);
-    const loggedInUser = ref(pb.authStore.model);
-    const loggedInUserFeatures = ref<any>();
 
     const users = ref<any[]>([]);
+    const loggedInUser = ref(pb.authStore.model);
+    const loggedInUserFeatures = ref<any>();
+    const selectedUser = ref<any>({});
+    const selectedUserFeatures = ref<any>({});
 
     const usersPending = ref(false);
 
     const searchView = ref(false);
-
-    const selectedUser = ref<any>({});
-    const selectedUserFeatures = ref<any>({});
 
     const getSearchingUsers = async (input: string) => {
         users.value = await pb.collection('users').getFullList({
@@ -68,16 +71,20 @@ export const useUsersStore = defineStore("users", () => {
     }
 
     const openUserDisplay = async (user: any) => {
-        useMainStore().dashboardMainDisplay = Blank;
-        usePostsStore().selectedPostView = false;
+        postsStore.allPostsPending = true;
+        mainStore.dashboardMainDisplay = Blank;
+        postsStore.selectedPostView = false;
         selectedUser.value = user;
-        usePostsStore().allPostsPending = true;
-        await usePostsStore().getUserPosts(user?.id)
+
+        await postsStore.getUserPosts(user?.id)
             .then(async () => {
                 await getSelectedUserFeatures(user?.username, user?.email);
             })
-            .then(() => usePostsStore().allPostsPending = false)
-            .then(() => useMainStore().dashboardMainDisplay = User)
+            .then(() => {
+                postsStore.allPostsPending = false;
+                mainStore.dashboardMainDisplay = User;
+                useUsersStore().searchView = false;
+            })
     }
 
     return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, selectedUserFeatures, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers, getSelectedUserFeatures, openUserDisplay };

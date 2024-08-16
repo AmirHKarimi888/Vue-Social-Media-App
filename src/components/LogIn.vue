@@ -3,7 +3,7 @@
         <div class="py-3 sm:max-w-xl sm:mx-auto w-full">
             <div class="relative px-4 py-10 bg-zinc-100 dark:bg-zinc-800 border border-zinc-400 dark-border mx-8 md:mx-0 shadow rounded-3xl sm:p-10">
                 <div class="max-w-md mx-auto text-gray-500 dark:text-white">
-                    <div @click="useMainStore().mainDisplay = Dashboard" class="cursor-pointer p-2 rounded-full border border-zinc-400 dark-border w-10 h-10 flex justify-center items-center">
+                    <div @click="mainDisplay = Dashboard" class="cursor-pointer p-2 rounded-full border border-zinc-400 dark-border w-10 h-10 flex justify-center items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8l8 8l1.41-1.41L7.83 13H20z"/></svg>
                     </div>
                     <form @submit.prevent="onSubmit">
@@ -55,7 +55,7 @@
 
                     <div class="flex items-center justify-between mt-4">
                         <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
-                        <a @click="useMainStore().mainDisplay = SignUp"
+                        <a @click="mainDisplay = SignUp"
                             class="cursor-pointer text-xs text-gray-500 uppercase dark:text-gray-500 hover:underline">or
                             sign up</a>
                         <span class="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -74,6 +74,11 @@ import { CheckBox } from "../components/icons";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import useLogIn from "../composables/useLogIn";
+import { storeToRefs } from "pinia";
+
+const mainStore = useMainStore();
+
+const { mainDisplay } = storeToRefs(mainStore);
 
 const showPassword = ref(false);
 

@@ -1,3 +1,4 @@
+import { storeToRefs } from "pinia";
 import { Dashboard } from "../components";
 import { pb } from "../pocketbase"
 import { useMainStore } from "../stores/main";
@@ -5,9 +6,14 @@ import { useUsersStore } from "../stores/userManagement";
 
 export default function () {
 
-    const logIn = async (data: any) => {
+    const mainStore = useMainStore();
+    const usersStore = useUsersStore();
 
-        const { updateLoggedInUser } = useUsersStore();
+    const { mainDisplay } = storeToRefs(mainStore);
+
+    const { updateLoggedInUser } = usersStore;
+
+    const logIn = async (data: any) => {
 
         const { email, password } = data;
 
@@ -15,7 +21,7 @@ export default function () {
             await pb.collection("users").authWithPassword(email, password)
             .then(() => pb.authStore.exportToCookie())
             .then(() => updateLoggedInUser())
-            .then(() => useMainStore().mainDisplay = Dashboard)
+            .then(() => mainDisplay.value = Dashboard)
         } catch (error: any) {
             alert(error.message);
         }

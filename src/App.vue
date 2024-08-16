@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { usePostsStore } from './stores/postManagement';
+import { storeToRefs } from 'pinia';
 
+const postsStore = usePostsStore();
+
+const { selectedPostView } = storeToRefs(postsStore);
+const { openPostModal } = postsStore;
 
 onMounted(async () => {
   "theme" in localStorage ? null : localStorage.setItem("theme", "light");
@@ -13,8 +18,8 @@ onMounted(async () => {
   }
 
 
-  if (location.hash && !usePostsStore().selectedPostView) {
-    await usePostsStore().openPostModal(location.hash.replace("#", ""));
+  if (location.hash && !selectedPostView.value) {
+    await openPostModal(location.hash.replace("#", ""));
   }
 
 })

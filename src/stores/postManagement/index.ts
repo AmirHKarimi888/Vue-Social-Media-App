@@ -5,29 +5,29 @@ import { pb } from "../../pocketbase";
 
 export const usePostsStore = defineStore("posts", () => {
 
+    const usersStore = useUsersStore();
+
+    const { updateLoggedInUserFeaturesPosts } = usersStore;
+
     const posts = ref<any[]>([]);
-    const allPostsPending = ref(false);
-    const { updateLoggedInUserFeaturesPosts } = useUsersStore();
-
     const previouslyLoadedPosts = ref<any[]>([]);
-
     const selectedPost = ref<any>({});
+
     const selectedPostView = ref(false);
-    const selectedPostPending = ref(false);
-    
     const createPostsView = ref(false);
 
+    const allPostsPending = ref(false);
+    const selectedPostPending = ref(false);
 
     const createPosts = async (data: any) => {
 
-        const { title, description, files, status } = data;
+        const { description, files, status } = data;
 
         const newPost = {
-            title: title,
             description: !description ? "" : description,
             contents: "",
-            author: useUsersStore().loggedInUser?.id,
-            authorEmail: useUsersStore().loggedInUser?.email,
+            author: usersStore.loggedInUser?.id,
+            authorEmail: usersStore.loggedInUser?.email,
             poster: files[0],
             media: files,
             views: 0,
@@ -48,7 +48,7 @@ export const usePostsStore = defineStore("posts", () => {
     }
 
     const getOwnPosts = async () => {
-        const id = useUsersStore().loggedInUser?.id
+        const id = usersStore.loggedInUser?.id
         posts.value = await pb.collection('posts').getFullList({
             filter: "author = " + "'" + id + "'" + "",
             sort: "-created"
@@ -110,9 +110,9 @@ export const usePostsStore = defineStore("posts", () => {
 
     const getBookmarks = async () => {
         posts.value = [];
-        await useUsersStore().getLoggedInUserFeatures()
+        await usersStore.getLoggedInUserFeatures()
         .then(() => {
-            useUsersStore().loggedInUserFeatures?.bookmarks.map(async (bookmark: any) => {
+            usersStore.loggedInUserFeatures?.bookmarks.map(async (bookmark: any) => {
                 await pb.collection('posts').getOne(bookmark)
                 .then((data) => {
                     posts.value.push(data);
@@ -137,10 +137,10 @@ export const usePostsStore = defineStore("posts", () => {
     const likePost = async (post: any) => {
         try {
             let likes = [];
-            if (post?.likes.includes(useUsersStore().loggedInUser?.id)) {
-                likes = post?.likes.filter((like: any) => like !== useUsersStore().loggedInUser?.id);
+            if (post?.likes.includes(usersStore.loggedInUser?.id)) {
+                likes = post?.likes.filter((like: any) => like !== usersStore.loggedInUser?.id);
             } else {
-                likes = [...post?.likes, useUsersStore().loggedInUser?.id]
+                likes = [...post?.likes, usersStore.loggedInUser?.id]
             }
             await pb.collection("posts").update(post?.id, {
                 likes: likes
@@ -163,12 +163,12 @@ export const usePostsStore = defineStore("posts", () => {
     const bookmarkPost = async (post: any) => {
         try {
             let bookmarks = [];
-            if (useUsersStore().loggedInUserFeatures?.bookmarks.includes(post?.id)) {
-                bookmarks = useUsersStore().loggedInUserFeatures?.bookmarks.filter((bookmark: any) => bookmark !== post?.id);
+            if (usersStore.loggedInUserFeatures?.bookmarks.includes(post?.id)) {
+                bookmarks = usersStore.loggedInUserFeatures?.bookmarks.filter((bookmark: any) => bookmark !== post?.id);
             } else {
-                bookmarks = [...useUsersStore().loggedInUserFeatures?.bookmarks, post?.id]
+                bookmarks = [...usersStore.loggedInUserFeatures?.bookmarks, post?.id]
             }
-            await pb.collection("users_features").update(useUsersStore().loggedInUserFeatures?.id, {
+            await pb.collection("users_features").update(usersStore.loggedInUserFeatures?.id, {
                 bookmarks: bookmarks
             })
 

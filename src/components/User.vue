@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <div v-if="usePostsStore().allPostsPending" class="w-full mt-40 grid justify-center items-center">
+        <div v-if="allPostsPending" class="w-full mt-40 grid justify-center items-center">
             <Spinner />
         </div>
         <ul v-else class="mt-2 w-full grid grid-cols-3 gap-2">
@@ -41,16 +41,18 @@ import { storeToRefs } from 'pinia';
 import { VITE_PB_URL_USERS } from '../pocketbase';
 
 const userStore = useUsersStore();
+const postsStore = usePostsStore();
 
 const { selectedUser, selectedUserFeatures } = storeToRefs(userStore);
-
 const { getUserPosts } = usePostsStore();
 
+const { allPostsPending } = storeToRefs(postsStore);
+
 onBeforeMount(async () => {
-    if (!useUsersStore().selectedUser) {
-        usePostsStore().allPostsPending = true;
+    if (!selectedUser.value) {
+        allPostsPending.value = true;
         await getUserPosts(selectedUser.value?.id)
-            .then(() => usePostsStore().allPostsPending = false)
+            .then(() => allPostsPending.value = false)
     }
 })
 </script>
