@@ -3,9 +3,11 @@
 
         <div class="px-10 flex justify-between items-center mb-1">
 
-            <a :href="`#${selectedPost?.author}`"
-                @click="openUserDisplay(selectedUser)">
+
                 <div class="flex items-center gap-3">
+
+                    <a :href="`#users/${selectedPost?.author}`"
+                    @click="openUserDisplay(selectedUser)" class="flex justify-center items-center gap-2">
 
                     <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
                         :src="selectedPost?.authorDetails ? selectedPost?.authorDetails?.avatar ? `${VITE_PB_URL_USERS}/${selectedPost?.authorDetails?.id}/${selectedPost?.authorDetails?.avatar}` : selectedPost?.authorDetails?.alternativeAvatar : selectedUser?.avatar ? `${VITE_PB_URL_USERS}/${selectedUser?.id}/${selectedUser?.avatar}` : selectedUser?.alternativeAvatar"
@@ -23,8 +25,13 @@
                         </span>
                     </span>
 
+                    </a>
+
+                    <div>
+                        <FollowBtn @click="followUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
+                    </div>
+
                 </div>
-            </a>
 
             <div class="flex gap-3">
                 <div class="flex gap-1">
@@ -145,7 +152,7 @@ import { useConfirm } from 'primevue/useconfirm';
 import Button from 'primevue/button';
 import { storeToRefs } from 'pinia';
 import { useMainStore } from '../stores/main';
-import { Bookmarks, LogIn } from '.';
+import { Bookmarks, FollowBtn, LogIn } from '.';
 
 const emit = defineEmits(['close']);
 
@@ -158,8 +165,8 @@ const { dashboardMainDisplay } = storeToRefs(mainStore);
 const { selectedPost, posts, allPostsPending, selectedPostPending, selectedPostView } = storeToRefs(postStore);
 const { likePost, viewPost, bookmarkPost, deletePost, getBookmarks } = usePostsStore();
 
-const { selectedUser, loggedInUser, isLoggedIn, loggedInUserFeatures } = storeToRefs(userStore);
-const { getUser, getLoggedInUserFeatures, openUserDisplay } = useUsersStore();
+const { selectedUser, loggedInUser, isLoggedIn, loggedInUserFeatures, selectedUserFeatures } = storeToRefs(userStore);
+const { getUser, getLoggedInUserFeatures, openUserDisplay, getSelectedUserFeatures, followUser } = useUsersStore();
 
 const confirm = useConfirm();
 
@@ -185,7 +192,8 @@ onBeforeMount(async () => {
 })
 
 onMounted(async () => {
-    await getUser(selectedPost.value?.author);
+    await getUser(selectedPost.value?.author)
+    .then(async () => await getSelectedUserFeatures(selectedUser.value?.username, selectedUser.value?.email));
 
     await viewPost(selectedPost.value)
         .then(() => selectedPost.value = { ...selectedPost.value, views: +selectedPost.value?.views + 1 })
@@ -263,6 +271,7 @@ const deleteSelectedPost = async () => {
         selectedPostPending.value = false;
     }
 }
+
 
 const requireConfirmation = (event: any) => {
     confirm.require({

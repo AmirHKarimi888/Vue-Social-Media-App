@@ -15,8 +15,8 @@ export const useUsersStore = defineStore("users", () => {
     const users = ref<any[]>([]);
     const loggedInUser = ref(pb.authStore.model);
     const loggedInUserFeatures = ref<any>();
-    const selectedUser = ref<any>({});
-    const selectedUserFeatures = ref<any>({});
+    const selectedUser = ref<any>();
+    const selectedUserFeatures = ref<any>();
 
     const usersPending = ref(false);
 
@@ -70,11 +70,66 @@ export const useUsersStore = defineStore("users", () => {
         selectedUser.value = await pb.collection('users').getOne(id);
     }
 
-    const openUserDisplay = async (user: any) => {
+
+
+    const followUser = async (user: any, userFeatures: any) => {
+        let followers = [];
+        let followings = [];
+
+        if (userFeatures?.followers.includes(loggedInUser.value?.id)) {
+            followers = userFeatures?.followers.filter((follower: any) => {
+                if (follower !== loggedInUser.value?.id) {
+                    return follower;
+                }
+            })
+
+            followings = loggedInUserFeatures.value?.followings.filter((following: any) => {
+                if (following !== user?.id) {
+                    return following;
+                }
+            })
+
+        } else {
+            followers = [...userFeatures?.followers, loggedInUser.value?.id];
+            followings = [...loggedInUserFeatures.value?.followings, user?.id];
+        }
+
+        setTimeout(async () => {
+            await pb.collection('users_features').update(userFeatures?.id, {
+                followers: followers
+            })
+            .then(async () => {
+                await pb.collection('users_features').update(loggedInUserFeatures.value?.id, {
+                    followings: followings
+                })
+            })
+            //.then(async () => await getLoggedInUserFeatures())
+            // .then(async () => {
+            //     if (selectedUserFeatures.value) {
+            //         await getSelectedUserFeatures(userFeatures?.username, userFeatures?.email)
+            //     }
+            // })
+            .then(() => {
+                selectedUserFeatures.value = { ...selectedUserFeatures.value, followers: followers }
+                loggedInUserFeatures.value = { ...loggedInUserFeatures.value, followings: followings }
+            })
+        })
+    }
+
+
+    
+    const openUserDisplay = async (user: any, id?: any) => {
+
         postsStore.allPostsPending = true;
         mainStore.dashboardMainDisplay = Blank;
         postsStore.selectedPostView = false;
-        selectedUser.value = user;
+
+        if (user) {
+            selectedUser.value = user;
+        } else {
+            await getUser(id);
+            user = selectedUser.value;
+        }
 
         await postsStore.getUserPosts(user?.id)
             .then(async () => {
@@ -87,5 +142,5 @@ export const useUsersStore = defineStore("users", () => {
             })
     }
 
-    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, selectedUserFeatures, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers, getSelectedUserFeatures, openUserDisplay };
+    return { isLoggedIn, loggedInUser, loggedInUserFeatures, selectedUser, selectedUserFeatures, users, usersPending, searchView, updateLoggedInUser, getLoggedInUserFeatures, updateLoggedInUserFeaturesPosts, getUser, getSearchingUsers, getSelectedUserFeatures, openUserDisplay, followUser };
 })

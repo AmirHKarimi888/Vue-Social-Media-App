@@ -1,7 +1,7 @@
 <template>
     <li v-for="post in posts" :key="post?.id" @click="openPostModal(post?.id)"
         class="aspect-square shadow-lg shadow-zinc-500 dark:border dark:shadow-none dark:border-zinc-900 cursor-pointer">
-        <a :href="`#${post?.id}`">
+        <a :href="`#posts/${post?.id}`">
             <img class="w-full aspect-square" :src="`${VITE_PB_URL_POSTS}/${post?.id}/${post?.poster}?thumb=100x100`"
             alt="">
         </a>

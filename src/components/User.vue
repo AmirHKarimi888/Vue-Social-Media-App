@@ -18,6 +18,10 @@
                         <span>{{ selectedUserFeatures?.followers?.length }} followers</span>
                         <span>{{ selectedUserFeatures?.posts?.length }} posts</span>
                     </div>
+
+                    <div class="mt-2">
+                        <FollowBtn @click="followThisUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
+                    </div>
                 </span>
             </div>
         </div>
@@ -33,20 +37,21 @@
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
-import { Posts } from '.';
+import { FollowBtn, Posts } from '.';
 import { usePostsStore } from '../stores/postManagement';
 import { Spinner } from './icons';
 import { useUsersStore } from '../stores/userManagement';
 import { storeToRefs } from 'pinia';
 import { VITE_PB_URL_USERS } from '../pocketbase';
 
-const userStore = useUsersStore();
+const usersStore = useUsersStore();
 const postsStore = usePostsStore();
 
-const { selectedUser, selectedUserFeatures } = storeToRefs(userStore);
-const { getUserPosts } = usePostsStore();
+const { selectedUser, selectedUserFeatures } = storeToRefs(usersStore);
+const { followUser } = usersStore;
 
 const { allPostsPending } = storeToRefs(postsStore);
+const { getUserPosts } = postsStore;
 
 onBeforeMount(async () => {
     if (!selectedUser.value) {
@@ -55,6 +60,10 @@ onBeforeMount(async () => {
             .then(() => allPostsPending.value = false)
     }
 })
+
+const followThisUser = async (user: any, userFeatures: any) => {
+    await followUser(user, userFeatures);
+}
 </script>
 
 <style scoped></style>

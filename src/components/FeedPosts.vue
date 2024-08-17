@@ -1,14 +1,15 @@
 <template>
     <li v-for="post in posts" :key="post?.id"
         class="aspect-auto shadow-lg shadow-zinc-200 border dark:shadow-none dark:border-zinc-800 p-6">
-        <a :href="`#${post?.authorDetails.id}`" @click="openUserDisplay(post?.authorDetails)">
+        
             <div class="flex items-center gap-3">
+                <a :href="`#users/${post?.authorDetails.id}`" @click="openUserDisplay(post?.authorDetails)" class="flex justify-center items-center gap-2">
 
                 <img class="w-12 h-12 aspect-square rounded-full bg-slate-500 shadow-lg"
-                    :src="post.authorDetails?.avatar ? `${VITE_PB_URL_USERS}/${post.authorDetails?.id}/${post.authorDetails?.avatar}` : post.authorDetails?.alternativeAvatar"
+                    :src="post?.authorDetails?.avatar ? `${VITE_PB_URL_USERS}/${post?.authorDetails?.id}/${post?.authorDetails?.avatar}` : post?.authorDetails?.alternativeAvatar"
                     alt="avatar" />
                 <span class="flex flex-col font-bold">
-                    {{ post.authorDetails?.username }}
+                    {{ post?.authorDetails?.username }}
                     <span class="text-xs text-zinc-500">{{ created(post) }}</span>
                     <span class="text-xs text-zinc-500 flex items-center gap-1">
                         {{ post?.views }}
@@ -19,8 +20,13 @@
                     </span>
                 </span>
 
+                </a>
+
+                <div>
+                    <FollowBtn @click="followThisUser(post?.authorDetails)" :selectedUser="post?.authorDetails" />
+                </div>
+
             </div>
-        </a>
 
         <img :src="`${VITE_PB_URL_POSTS}/${post?.id}/${post?.poster}`"
             class="mx-auto w-full aspect-[1] my-2 border dark:border-zinc-900" alt="image">
@@ -49,7 +55,7 @@
         </div>
 
         <div class="mt-2 text-sm text-zinc-500 cursor-pointer">
-            <a :href="`#${post?.id}`" @click="openPost(post)">
+            <a :href="`#posts/${post?.id}`" @click="openPost(post)">
                 More
             </a>
         </div>
@@ -62,7 +68,7 @@ import { VITE_PB_URL_POSTS, VITE_PB_URL_USERS } from '../pocketbase';
 import { usePostsStore } from '../stores/postManagement';
 import { ref } from 'vue';
 import { useUsersStore } from '../stores/userManagement';
-import { BookmarkBtn, LikeBtn, LogIn } from '.';
+import { BookmarkBtn, FollowBtn, LikeBtn, LogIn } from '.';
 import { useMainStore } from '../stores/main';
 
 const mainStore = useMainStore();
@@ -71,8 +77,8 @@ const usersStore = useUsersStore();
 
 const { mainDisplay } = storeToRefs(mainStore);
 
-const { isLoggedIn, loggedInUser } = storeToRefs(usersStore);
-const { getLoggedInUserFeatures, openUserDisplay } = usersStore;
+const { isLoggedIn, loggedInUser, selectedUserFeatures } = storeToRefs(usersStore);
+const { getLoggedInUserFeatures, openUserDisplay, getSelectedUserFeatures, followUser } = usersStore;
 
 const { posts } = storeToRefs(postsStore);
 const { likePost, bookmarkPost, openPostModal } = postsStore;
@@ -117,6 +123,14 @@ const bookmarkSelectedPost = async (post: any) => {
     } else {
         isLoggedInErrView.value = true;
     }
+}
+
+const followThisUser  = async (author: any) => {
+    
+    await getSelectedUserFeatures(author?.username, author?.email)
+    .then(async () => {
+        await followUser(author, selectedUserFeatures.value);
+    })
 }
 
 const openPost = async (post: any) => {

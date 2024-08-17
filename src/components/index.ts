@@ -20,5 +20,6 @@ import Search from "./Search.vue";
 import UsersList from "./UsersList.vue";
 import UserItem from "./UserItem.vue";
 import User from "./User.vue";
+import FollowBtn from "./FollowBtn.vue";
 
-export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts, Post, Blank, FeedPosts, LikeBtn, BookmarkBtn, Explore, Search, UsersList, UserItem, User };
+export { LogIn, SignUp, Dashboard, Drawer, NavBar, Profile, CreatePosts, Options, Feed, PostManagement, Bookmarks, Posts, Post, Blank, FeedPosts, LikeBtn, BookmarkBtn, Explore, Search, UsersList, UserItem, User, FollowBtn };
