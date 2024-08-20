@@ -20,7 +20,7 @@
                     </div>
 
                     <div class="mt-2">
-                        <FollowBtn @click="followThisUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
+                        <FollowBtn v-if="selectedUser?.id !== loggedInUser?.id" @click="followThisUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
                     </div>
                 </span>
             </div>
@@ -47,7 +47,7 @@ import { VITE_PB_URL_USERS } from '../pocketbase';
 const usersStore = useUsersStore();
 const postsStore = usePostsStore();
 
-const { selectedUser, selectedUserFeatures } = storeToRefs(usersStore);
+const { selectedUser, selectedUserFeatures, loggedInUser } = storeToRefs(usersStore);
 const { followUser } = usersStore;
 
 const { allPostsPending } = storeToRefs(postsStore);

@@ -1,7 +1,7 @@
 <template>
     <div>
         <button v-if="!isFollowing" class="p-1 bg-green-600 text-white rounded-md font-normal text-sm cursor-pointer">Follow</button>
-        <button v-else class="p-1 bg-green-300/50 text-white rounded-md font-normal text-sm cursor-pointer">Following</button>
+        <button v-else class="p-1 bg-green-800/80 text-white rounded-md font-normal text-sm cursor-pointer">Following</button>
     </div>
 </template>
 

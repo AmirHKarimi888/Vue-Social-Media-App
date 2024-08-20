@@ -95,9 +95,9 @@ export const usePostsStore = defineStore("posts", () => {
                         // posts.value = posts.value.sort((a: any, b: any) => {
                         //     return b?.views - a?.views
                         // })
-                        posts.value = posts.value.sort((a: any, b: any) => {
-                            return b?.likes?.length - a?.likes?.length
-                        })
+                        // posts.value = posts.value.sort((a: any, b: any) => {
+                        //     return b?.likes?.length - a?.likes?.length
+                        // })
                     }
                 })
             })

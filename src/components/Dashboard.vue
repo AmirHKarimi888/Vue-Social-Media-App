@@ -16,8 +16,8 @@
             </div>
         </div>
 
-        <div class="w-full h-screen lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
-            <div class="posts rounded-md overflow-auto">
+        <div id="DashboardMainDisplay" class="w-full h-screen lg:col-span-2 md:col-span-3 sm:col-span-4 max-sm:col-span-4 grid gap-2 box-border">
+            <div id="Posts" class="posts rounded-md overflow-auto">
                 <component :is="dashboardMainDisplay"></component>
             </div>
         </div>

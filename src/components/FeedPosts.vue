@@ -23,7 +23,7 @@
                 </a>
 
                 <div>
-                    <FollowBtn @click="followThisUser(post?.authorDetails)" :selectedUser="post?.authorDetails" />
+                    <FollowBtn v-if="post?.authorDetails?.id !== loggedInUser?.id" @click="followThisUser(post?.authorDetails)" :selectedUser="post?.authorDetails" />
                 </div>
 
             </div>
@@ -143,6 +143,7 @@ const openPost = async (post: any) => {
             })
         })
 }
+
 </script>
 
 <style scoped></style>

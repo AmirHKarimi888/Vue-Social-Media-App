@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config';
 import Aura from "@primevue/themes/aura";
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
+import { MotionPlugin } from '@vueuse/motion';
 
 createApp(App)
     .use(createPinia())
@@ -26,4 +27,5 @@ createApp(App)
     })
     .use(ConfirmationService)
     .use(ToastService)
+    .use(MotionPlugin)
     .mount('#app')

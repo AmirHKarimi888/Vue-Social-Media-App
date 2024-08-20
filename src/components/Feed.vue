@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onMounted } from 'vue';
 import { usePostsStore } from '../stores/postManagement';
 import { FeedPosts } from '.';
 import Button from 'primevue/button';
@@ -37,6 +37,14 @@ const loadMore = async () => {
     pageNum ++;
     await getFeedPosts(pageNum, 5);
 }
+
+// onMounted(() => {
+//     const x = document.querySelector("#Posts") as HTMLElement;
+
+//     document.querySelector("#Posts")?.addEventListener("scroll", () => {
+//         console.log(x?.offsetHeight)
+//     })
+// })
 </script>
 
 <style scoped>

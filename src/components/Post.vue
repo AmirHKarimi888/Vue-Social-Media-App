@@ -28,7 +28,7 @@
                     </a>
 
                     <div>
-                        <FollowBtn @click="followUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
+                        <FollowBtn v-if="selectedUser?.id !== loggedInUser?.id" @click="followUser(selectedUser, selectedUserFeatures)" :selectedUser="selectedUser" />
                     </div>
 
                 </div>
