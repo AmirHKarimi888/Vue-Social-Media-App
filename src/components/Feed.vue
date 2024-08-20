@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { usePostsStore } from '../stores/postManagement';
 import { FeedPosts } from '.';
 import Button from 'primevue/button';
